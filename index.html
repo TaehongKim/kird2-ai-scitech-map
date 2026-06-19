@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 과학기술 혁신 사례-기술군 매핑 지식맵</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #252840;
+    --accent1: #6c63ff;
+    --accent2: #00c6ff;
+    --accent3: #f7971e;
+    --common: #4dd0e1;
+    --specialized: #f06292;
+    --text: #e8eaf6;
+    --text2: #9fa8da;
+    --border: #2d3154;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', 'Malgun Gothic', sans-serif; }
+  header {
+    background: linear-gradient(135deg, #1a1d2e 0%, #252840 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  header h1 { font-size: 1.4rem; font-weight: 700; }
+  header h1 span { color: var(--accent2); }
+  .meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; color: var(--text2); }
+  .badge b { color: var(--accent2); }
+  .tabs { display: flex; gap: 4px; padding: 12px 32px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .tab { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text2); transition: all 0.2s; border: 1px solid transparent; }
+  .tab.active { background: var(--accent1); color: #fff; border-color: var(--accent1); }
+  .tab:hover:not(.active) { background: var(--surface2); border-color: var(--border); }
+  .panel { display: none; padding: 24px 32px; }
+  .panel.active { display: block; }
+  .filter-bar { display: flex; gap: 12px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; align-items: center; }
+  .filter-bar label { font-size: 0.82rem; color: var(--text2); margin-right: 4px; }
+  .filter-bar select, .filter-bar input { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 5px 10px; font-size: 0.82rem; }
+  .btn-reset { background: var(--accent1); color: #fff; border: none; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 0.82rem; }
+  #network-svg { width: 100%; height: 580px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); display: block; }
+  .node-label { font-size: 9px; fill: var(--text); pointer-events: none; }
+  .link { stroke-opacity: 0.45; stroke-width: 1.2; }
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; text-align: center; }
+  .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--accent2); }
+  .stat-card .lbl { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .chart-card h3 { font-size: 0.9rem; color: var(--text2); margin-bottom: 12px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .bar-lbl { font-size: 0.78rem; color: var(--text); min-width: 100px; text-align: right; }
+  .bar-track { flex: 1; background: var(--surface2); border-radius: 4px; height: 18px; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-val { font-size: 0.75rem; color: var(--text2); min-width: 28px; }
+  #matrix-container { overflow: auto; max-height: 680px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  thead tr { background: var(--surface2); }
+  th { padding: 10px 12px; text-align: left; color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:hover td { background: var(--surface2); }
+  .tag { display: inline-block; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; margin: 1px; font-weight: 600; }
+  .tag-common { background: rgba(77,208,225,0.15); color: var(--common); border: 1px solid rgba(77,208,225,0.3); }
+  .tag-spec { background: rgba(240,98,146,0.15); color: var(--specialized); border: 1px solid rgba(240,98,146,0.3); }
+  .imp-상 { color: #ff7043; font-weight: 700; }
+  .imp-중 { color: var(--accent3); }
+  .imp-하 { color: var(--text2); }
+  .region-o { color: var(--accent2); }
+  .region-d { color: #81c784; }
+  .domain-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+  .domain-link-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-decoration: none; color: var(--text); transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
+  .domain-link-card:hover { border-color: var(--accent2); background: var(--surface2); }
+  .domain-icon { font-size: 1.8rem; }
+  .domain-link-card .d-name { font-weight: 600; font-size: 0.9rem; }
+  .domain-link-card .d-count { font-size: 0.75rem; color: var(--text2); }
+  .section-title { font-size: 1rem; font-weight: 700; color: var(--text2); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .tooltip2 { position: fixed; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; max-width: 280px; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 999; line-height: 1.6; }
+  .tooltip2.show { opacity: 1; }
+  .tooltip2 b { color: var(--accent2); }
+  .case-table-wrap { overflow-x: auto; }
+  #case-count { margin-top: 10px; font-size: 0.8rem; color: var(--text2); }
+  @media (max-width: 768px) { .charts-row { grid-template-columns: 1fr; } header { flex-direction: column; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>AI 과학기술 혁신 사례 <span>기술군 매핑 지식맵</span></h1>
+    <div style="font-size:0.78rem;color:var(--text2);margin-top:4px">2026.06 | KIRD 2차 과제 | Claude Code 자동 분석</div>
+  </div>
+  <div class="meta-badges">
+    <div class="badge">총 <b>100</b>건</div>
+    <div class="badge">해외 <b>80</b>건</div>
+    <div class="badge">국내 <b>20</b>건</div>
+    <div class="badge">공통기술 <b>20</b>개</div>
+    <div class="badge">특화기술 <b>50</b>개</div>
+    <div class="badge">분야 <b>10</b>개</div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('overview')">📊 개요 대시보드</div>
+  <div class="tab" onclick="switchTab('network')">🕸 사례-기술 네트워크</div>
+  <div class="tab" onclick="switchTab('matrix')">🧮 기술 매트릭스</div>
+  <div class="tab" onclick="switchTab('cases')">📋 사례 목록</div>
+  <div class="tab" onclick="switchTab('domains')">🗺 분야별 지식맵</div>
+</div>
+
+<div id="panel-overview" class="panel active">
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="charts-row">
+    <div class="chart-card"><h3>분야별 사례 수</h3><div id="chart-domain"></div></div>
+    <div class="chart-card"><h3>공통기술 활용 빈도 Top10</h3><div id="chart-tech"></div></div>
+  </div>
+  <div class="charts-row">
+    <div class="chart-card"><h3>국내 vs 해외</h3><div id="chart-region"></div></div>
+    <div class="chart-card"><h3>중요도 분포</h3><div id="chart-imp"></div></div>
+  </div>
+  <div class="section-title">분야별 지식맵</div>
+  <div class="domain-links" id="dlinks1"></div>
+</div>
+
+<div id="panel-network" class="panel">
+  <div class="filter-bar">
+    <label>분야:</label><select id="net-dom" onchange="initNetwork()"><option value="all">전체</option></select>
+    <label>기술 유형:</label>
+    <select id="net-ttype" onchange="initNetwork()">
+      <option value="all">전체</option><option value="common">공통</option><option value="specialized">특화</option>
+    </select>
+    <button class="btn-reset" onclick="document.getElementById('net-dom').value='all';document.getElementById('net-ttype').value='all';initNetwork()">초기화</button>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#6c63ff"></div>사례(해외)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#81c784"></div>사례(국내)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--common)"></div>공통기술</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--specialized)"></div>특화기술</div>
+  </div>
+  <svg id="network-svg"></svg>
+</div>
+
+<div id="panel-matrix" class="panel">
+  <div class="filter-bar">
+    <label>분야:</label><select id="mat-dom" onchange="initMatrix()"><option value="all">전체</option></select>
+    <label>기술 유형:</label>
+    <select id="mat-ttype" onchange="initMatrix()">
+      <option value="all">전체</option><option value="common">공통</option><option value="specialized">특화</option>
+    </select>
+    <button class="btn-reset" onclick="document.getElementById('mat-dom').value='all';document.getElementById('mat-ttype').value='all';initMatrix()">초기화</button>
+  </div>
+  <div id="matrix-container"><svg id="matrix-svg"></svg></div>
+</div>
+
+<div id="panel-cases" class="panel">
+  <div class="filter-bar">
+    <label>분야:</label><select id="f-dom" onchange="filterTable()"><option value="all">전체</option></select>
+    <label>지역:</label>
+    <select id="f-reg" onchange="filterTable()">
+      <option value="all">전체</option><option value="overseas">해외</option><option value="domestic">국내</option>
+    </select>
+    <label>중요도:</label>
+    <select id="f-imp" onchange="filterTable()">
+      <option value="all">전체</option><option value="상">상</option><option value="중">중</option><option value="하">하</option>
+    </select>
+    <label>검색:</label>
+    <input type="text" id="f-q" placeholder="사례명/기관 검색" oninput="filterTable()" style="min-width:160px">
+  </div>
+  <div class="case-table-wrap">
+    <table><thead><tr>
+      <th>#</th><th>사례명</th><th>기관</th><th>국가</th><th>분야</th>
+      <th>공통기술</th><th>분야특화기술</th><th>연도</th><th>중요도</th>
+    </tr></thead><tbody id="case-tbody"></tbody></table>
+  </div>
+  <div id="case-count"></div>
+</div>
+
+<div id="panel-domains" class="panel">
+  <p style="color:var(--text2);margin-bottom:16px;font-size:0.88rem">각 분야별 상세 지식맵 페이지로 이동합니다. 대표 사례 카드, D3.js 역량 체계도, 공통/특화 기술 분류가 포함됩니다.</p>
+  <div class="domain-links" id="dlinks2"></div>
+</div>
+
+<div class="tooltip2" id="tt"></div>
+
+<script>
+let D = null, TM = {};
+const ICONS = {'신약개발':'💊','바이오·의료':'🏥','소재':'⚗️','에너지':'⚡','기후·환경':'🌍','제조':'🏭','우주·항공':'🚀','농식품':'🌾','수학·기초과학':'🔢','로봇·자율화':'🤖'};
+const DFILES = {'신약개발':'domain/drug_discovery.html','바이오·의료':'domain/biomedical.html','소재':'domain/materials.html','에너지':'domain/energy.html','기후·환경':'domain/climate.html','제조':'domain/manufacturing.html','우주·항공':'domain/space.html','농식품':'domain/agriculture.html','수학·기초과학':'domain/math_science.html','로봇·자율화':'domain/robotics.html'};
+const DCOLORS = ['#6c63ff','#00c6ff','#f7971e','#4dd0e1','#f06292','#81c784','#ffb74d','#4fc3f7','#e57373','#ba68c8'];
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['overview','network','matrix','cases','domains'][i] === id));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if (D) { if (id==='network') initNetwork(); if (id==='matrix') initMatrix(); }
+}
+
+function showTip(evt, html) {
+  const t = document.getElementById('tt');
+  t.innerHTML = html; t.classList.add('show');
+  t.style.left = (evt.clientX+14)+'px'; t.style.top = (evt.clientY-10)+'px';
+}
+function hideTip() { document.getElementById('tt').classList.remove('show'); }
+
+fetch('data/case_tech_map.json').then(r=>r.json()).then(d => {
+  D = d;
+  d.technologies.forEach(t => TM[t.id] = t);
+  buildOverview();
+  buildFilters();
+  filterTable();
+  initNetwork();
+});
+
+/* ── OVERVIEW ── */
+function buildOverview() {
+  const domCount = {};
+  D.cases.forEach(c => domCount[c.domain] = (domCount[c.domain]||0)+1);
+
+  document.getElementById('stats-grid').innerHTML = [
+    {n:100, l:'총 수집 사례'},{n:80,l:'해외 사례'},{n:20,l:'국내 사례'},
+    {n:20,l:'공통 기술(IT 범용)'},{n:50,l:'분야 특화 기술'},{n:10,l:'대상 과학기술 분야'}
+  ].map(s=>`<div class="stat-card"><div class="num">${s.n}</div><div class="lbl">${s.l}</div></div>`).join('');
+
+  const maxD = Math.max(...Object.values(domCount));
+  document.getElementById('chart-domain').innerHTML = D.metadata.domains.map((d,i)=>{
+    const c = domCount[d]||0;
+    return `<div class="bar-row"><div class="bar-lbl">${ICONS[d]} ${d}</div><div class="bar-track"><div class="bar-fill" style="width:${(c/maxD*100).toFixed(0)}%;background:${DCOLORS[i]}"></div></div><div class="bar-val">${c}</div></div>`;
+  }).join('');
+
+  const tf = {};
+  D.cases.forEach(c => (c.common_techs||[]).forEach(t => tf[t]=(tf[t]||0)+1));
+  const top10 = Object.entries(tf).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxT = top10[0]?.[1]||1;
+  document.getElementById('chart-tech').innerHTML = top10.map(([tid,cnt])=>{
+    const t = TM[tid];
+    return `<div class="bar-row"><div class="bar-lbl">${t?.name||tid}</div><div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxT*100).toFixed(0)}%;background:var(--common)"></div></div><div class="bar-val">${cnt}</div></div>`;
+  }).join('');
+
+  const ov = D.cases.filter(c=>c.region_type==='overseas').length;
+  const dm = D.cases.filter(c=>c.region_type==='domestic').length;
+  document.getElementById('chart-region').innerHTML = [{l:'해외',c:ov,col:'var(--accent2)'},{l:'국내',c:dm,col:'#81c784'}].map(r=>
+    `<div class="bar-row"><div class="bar-lbl" style="min-width:50px">${r.l}</div><div class="bar-track"><div class="bar-fill" style="width:${(r.c/(ov+dm)*100).toFixed(0)}%;background:${r.col}"></div></div><div class="bar-val">${r.c}</div></div>`
+  ).join('');
+
+  const imp = {상:0,중:0,하:0};
+  D.cases.forEach(c=>{if(c.importance in imp)imp[c.importance]++;});
+  const maxI = Math.max(...Object.values(imp));
+  document.getElementById('chart-imp').innerHTML = Object.entries(imp).map(([k,v])=>{
+    const col = {상:'#ff7043',중:'var(--accent3)',하:'var(--text2)'}[k];
+    return `<div class="bar-row"><div class="bar-lbl">${k} 중요도</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxI*100).toFixed(0)}%;background:${col}"></div></div><div class="bar-val">${v}</div></div>`;
+  }).join('');
+
+  ['dlinks1','dlinks2'].forEach(id => {
+    document.getElementById(id).innerHTML = D.metadata.domains.map(d=>`
+      <a class="domain-link-card" href="${DFILES[d]}">
+        <div class="domain-icon">${ICONS[d]}</div>
+        <div><div class="d-name">${d}</div><div class="d-count">${domCount[d]||0}건 사례</div></div>
+      </a>`).join('');
+  });
+}
+
+/* ── NETWORK ── */
+let sim = null;
+function initNetwork() {
+  if (!D) return;
+  const svg = d3.select('#network-svg');
+  svg.selectAll('*').remove();
+  if (sim) { sim.stop(); sim = null; }
+  const W = document.getElementById('network-svg').clientWidth || 900;
+  const H = 580;
+  svg.attr('viewBox', `0 0 ${W} ${H}`);
+
+  const dFilter = document.getElementById('net-dom').value;
+  const tFilter = document.getElementById('net-ttype').value;
+  let cases = D.cases;
+  if (dFilter !== 'all') cases = cases.filter(c=>c.domain===dFilter);
+
+  const usedTids = new Set();
+  cases.forEach(c=>[...(c.common_techs||[]),...(c.domain_techs||[])].forEach(t=>usedTids.add(t)));
+
+  let techs = D.technologies.filter(t=>usedTids.has(t.id));
+  if (tFilter !== 'all') techs = techs.filter(t=>t.type===tFilter);
+  const techSet = new Set(techs.map(t=>t.id));
+
+  const nodes = [
+    ...cases.map(c=>({...c, ntype:'case'})),
+    ...techs.map(t=>({...t, ntype:'tech'}))
+  ];
+  const links = [];
+  cases.forEach(c=>{
+    [...(c.common_techs||[]),...(c.domain_techs||[])].forEach(tid=>{
+      if (techSet.has(tid)) links.push({source:c.id, target:tid, tt:TM[tid]?.type});
+    });
+  });
+
+  const zoom = d3.zoom().scaleExtent([0.15,5]).on('zoom', e=>g.attr('transform',e.transform));
+  svg.call(zoom);
+  const g = svg.append('g');
+
+  sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(70))
+    .force('charge', d3.forceManyBody().strength(-140))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collision', d3.forceCollide(18));
+
+  const link = g.append('g').selectAll('line').data(links).join('line')
+    .attr('class','link')
+    .attr('stroke', d=>d.tt==='common'?'rgba(77,208,225,0.5)':'rgba(240,98,146,0.4)');
+
+  const nodeG = g.append('g').selectAll('g').data(nodes).join('g')
+    .call(d3.drag()
+      .on('start',(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
+      .on('drag',(e,d)=>{d.fx=e.x;d.fy=e.y;})
+      .on('end',(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
+
+  nodeG.append('circle')
+    .attr('r', d=>d.ntype==='case'?8:6)
+    .attr('fill', d=>{
+      if(d.ntype==='case') return d.region_type==='overseas'?'#6c63ff':'#81c784';
+      return d.type==='common'?'var(--common)':'var(--specialized)';
+    })
+    .attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width',1)
+    .on('mouseover', (evt,d)=>{
+      if(d.ntype==='case') showTip(evt, `<b>${d.name_ko}</b><br>기관: ${d.org}<br>분야: ${d.domain}<br>연도: ${d.year}<br>중요도: ${d.importance}`);
+      else { const n=D.cases.filter(c=>[...(c.common_techs||[]),...(c.domain_techs||[])].includes(d.id)).length; showTip(evt,`<b>${d.name}</b><br>유형: ${d.type==='common'?'공통 기술':'분야 특화'}<br>활용 사례: ${n}건`); }
+    })
+    .on('mouseout', hideTip);
+
+  nodeG.append('text').attr('class','node-label').attr('dy',-10).attr('text-anchor','middle')
+    .text(d=>d.ntype==='tech'?(d.name.length>8?d.name.substring(0,8)+'…':d.name):'');
+
+  sim.on('tick', ()=>{
+    link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    nodeG.attr('transform',d=>`translate(${d.x},${d.y})`);
+  });
+}
+
+/* ── MATRIX ── */
+function initMatrix() {
+  if (!D) return;
+  const dFilter = document.getElementById('mat-dom').value;
+  const tFilter = document.getElementById('mat-ttype').value;
+  let cases = D.cases;
+  if (dFilter !== 'all') cases = cases.filter(c=>c.domain===dFilter);
+  const usedTids = new Set();
+  cases.forEach(c=>[...(c.common_techs||[]),...(c.domain_techs||[])].forEach(t=>usedTids.add(t)));
+  let techs = D.technologies.filter(t=>usedTids.has(t.id));
+  if (tFilter !== 'all') techs = techs.filter(t=>t.type===tFilter);
+
+  const cs = 16, mL = 160, mT = 120;
+  const W = mL + techs.length * cs + 20;
+  const H = mT + cases.length * cs + 20;
+  const svg = d3.select('#matrix-svg').attr('width', W).attr('height', H);
+  svg.selectAll('*').remove();
+
+  techs.forEach((t,j)=>{
+    svg.append('text')
+      .attr('x', mL + j*cs + cs/2).attr('y', mT-8)
+      .attr('transform',`rotate(-60,${mL+j*cs+cs/2},${mT-8})`)
+      .attr('text-anchor','start')
+      .attr('fill', t.type==='common'?'var(--common)':'var(--specialized)')
+      .attr('font-size',9).text(t.name);
+  });
+
+  cases.forEach((c,i)=>{
+    svg.append('text')
+      .attr('x',mL-5).attr('y',mT+i*cs+cs/2+4)
+      .attr('text-anchor','end').attr('fill','var(--text)').attr('font-size',9)
+      .text(c.name_ko.length>18?c.name_ko.substring(0,18)+'…':c.name_ko);
+    const ct = new Set([...(c.common_techs||[]),...(c.domain_techs||[])]);
+    techs.forEach((t,j)=>{
+      svg.append('rect')
+        .attr('x',mL+j*cs+1).attr('y',mT+i*cs+1)
+        .attr('width',cs-2).attr('height',cs-2).attr('rx',2)
+        .attr('fill', ct.has(t.id)?(t.type==='common'?'var(--common)':'var(--specialized)'):'var(--surface2)')
+        .attr('opacity', ct.has(t.id)?0.85:0.4)
+        .on('mouseover', evt=>showTip(evt, ct.has(t.id)?`<b>${c.name_ko}</b><br>→ <b>${t.name}</b> (${t.type==='common'?'공통':'특화'})`:`(연결 없음)`))
+        .on('mouseout', hideTip);
+    });
+  });
+}
+
+/* ── CASE TABLE ── */
+function filterTable() {
+  if (!D) return;
+  const dom = document.getElementById('f-dom')?.value || 'all';
+  const reg = document.getElementById('f-reg')?.value || 'all';
+  const imp = document.getElementById('f-imp')?.value || 'all';
+  const q = (document.getElementById('f-q')?.value || '').toLowerCase();
+  const filtered = D.cases.filter(c=>{
+    if(dom!=='all'&&c.domain!==dom) return false;
+    if(reg!=='all'&&c.region_type!==reg) return false;
+    if(imp!=='all'&&c.importance!==imp) return false;
+    if(q&&!c.name_ko.toLowerCase().includes(q)&&!c.org.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('case-tbody').innerHTML = filtered.map((c,i)=>{
+    const cmn = (c.common_techs||[]).map(t=>`<span class="tag tag-common">${TM[t]?.name||t}</span>`).join('');
+    const spc = (c.domain_techs||[]).map(t=>`<span class="tag tag-spec">${TM[t]?.name||t}</span>`).join('');
+    return `<tr>
+      <td>${i+1}</td>
+      <td><a href="${c.url}" target="_blank" style="color:var(--accent2);text-decoration:none">${c.name_ko}</a></td>
+      <td style="font-size:0.78rem">${c.org}</td>
+      <td class="${c.region_type==='overseas'?'region-o':'region-d'}" style="font-size:0.78rem">${c.country}</td>
+      <td style="font-size:0.78rem">${ICONS[c.domain]||''} ${c.domain}</td>
+      <td>${cmn}</td><td>${spc}</td>
+      <td style="font-size:0.78rem">${c.year}</td>
+      <td class="imp-${c.importance}">${c.importance}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('case-count').textContent = `${filtered.length}건 표시 중 (전체 ${D.cases.length}건)`;
+}
+
+/* ── FILTERS ── */
+function buildFilters() {
+  ['net-dom','mat-dom','f-dom'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    D.metadata.domains.forEach(d=>{
+      const o = document.createElement('option'); o.value=d; o.textContent=`${ICONS[d]} ${d}`; el.appendChild(o);
+    });
+  });
+}
+</script>
+</body>
+</html>
