@@ -63,6 +63,10 @@ a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
 .filter-bar input{min-width:220px}
 footer{margin-top:80px;padding:32px 0;border-top:1px solid var(--line);text-align:center;font-size:12px;color:var(--muted)}
 @media(max-width:900px){.page-wrap{display:block}.sidebar{display:none}main{padding:28px 20px 60px}.stats-row{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}}
+.sidebar-nav-btn { display:block; background:var(--brand); color:#fff; text-decoration:none; text-align:center; padding:9px 12px; border-radius:8px; font-size:13px; font-weight:700; margin-bottom:16px; transition:opacity .15s; }
+.sidebar-nav-btn:hover { opacity:.85; }
+.cover-link-btn { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:8px 20px; font-size:13px; font-weight:600; color:#fff; text-decoration:none; transition:background .2s; }
+.cover-link-btn:hover { background:rgba(255,255,255,.28); }
 </style>
 </head>
 <body>
@@ -70,6 +74,7 @@ footer{margin-top:80px;padding:32px 0;border-top:1px solid var(--line);text-alig
 
 <nav class="sidebar">
   <div class="sidebar-logo">📊 KIRD 2026 보고서</div>
+  <a href="index.html" class="sidebar-nav-btn">🗺️ 종합 지식맵 바로가기</a>
   <div class="toc">
     <div class="toc-section-title">Contents</div>
     <a href="#overview">1. 분석 개요</a>
@@ -107,6 +112,7 @@ footer{margin-top:80px;padding:32px 0;border-top:1px solid var(--line);text-alig
     <span class="cover-badge">🌐 해외 80건 · 국내 20건</span>
     <span class="cover-badge">🔬 10개 과학기술 분야</span>
     <span class="cover-badge">⚙️ 70종 기술군</span>
+    <a href="index.html" class="cover-link-btn">🗺️ 인터랙티브 지식맵 →</a>
   </div>
 </div>
 
@@ -589,7 +595,7 @@ footer{margin-top:80px;padding:32px 0;border-top:1px solid var(--line);text-alig
 <tr><td><code>C100</code></td><td>🌐 <a href="https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-robot-actions/" target="_blank">Google DeepMind RT-2 비전-언어-행동 로봇 모델</a></td><td>로봇·자율화</td><td>Google DeepMind</td><td>2023</td><td><span class="imp imp-high">상</span></td><td class="tech-cell">파운데이션 모델, 멀티모달 AI, 트랜스포머</td><td class="tech-cell">산업용 휴머노이드 제어</td></tr>
 </tbody></table></div>
 <footer><p>AI 과학기술 혁신 사례 기술군 매핑 분석 보고서 · KIRD 한국연구인재개발원 · 2026년 6월</p>
-<p style="margin-top:6px">Generated with Claude AI (Anthropic) — <a href="index.html">종합 지식맵 보기</a></p></footer>
+<p style="margin-top:6px">Generated with Claude AI (Anthropic) &nbsp;|&nbsp; <a href="index.html" style="font-weight:700;color:var(--brand)">🗺️ 종합 인터랙티브 지식맵 →</a></p></footer>
 </main></div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>

@@ -86,6 +86,8 @@
   .tooltip2 b { color: var(--accent2); }
   .case-table-wrap { overflow-x: auto; }
   #case-count { margin-top: 10px; font-size: 0.8rem; color: var(--text2); }
+  .nav-btn { display:inline-flex; align-items:center; gap:6px; background:var(--accent1); color:#fff; border:none; border-radius:20px; padding:7px 18px; font-size:0.82rem; font-weight:600; cursor:pointer; text-decoration:none; transition:opacity .15s; white-space:nowrap; }
+  .nav-btn:hover { opacity:.85; }
   @media (max-width: 768px) { .charts-row { grid-template-columns: 1fr; } header { flex-direction: column; } }
 </style>
 </head>
@@ -103,6 +105,7 @@
     <div class="badge">특화기술 <b>50</b>개</div>
     <div class="badge">분야 <b>10</b>개</div>
   </div>
+  <a href="report.html" class="nav-btn">📄 분석 보고서</a>
 </header>
 
 <div class="tabs">
