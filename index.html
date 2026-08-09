@@ -390,7 +390,7 @@ function initMatrix() {
   cases.forEach((c,i)=>{
     svg.append('text')
       .attr('x',mL-5).attr('y',mT+i*cs+cs/2+4)
-      .attr('text-anchor','end').attr('fill','var(--text)').attr('font-size',9)
+      .attr('text-anchor','end').attr('fill',domainColor(c.domain)).attr('font-size',9)
       .text(c.name_ko.length>18?c.name_ko.substring(0,18)+'…':c.name_ko);
     const ct = new Set([...(c.common_techs||[]),...(c.domain_techs||[])]);
     techs.forEach((t,j)=>{
