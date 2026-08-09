@@ -1,4 +1,4 @@
-import json, pathlib, collections, datetime
+import json, pathlib, collections, datetime, re
 
 root = pathlib.Path(r"z:\CS\Common\★ 평가&자문\260521 KIRD 2\outputs")
 with open(root / "data" / "case_tech_map.json", encoding="utf-8") as f:
@@ -68,6 +68,10 @@ def tech_rows(tech_list):
                     f'<td><div class="bar-cell"><div class="bar-fill" style="width:{pct}%"></div><span>{pct}%</span></div></td></tr>')
     return "\n".join(rows)
 
+def source_host(url):
+    m = re.match(r'https?://(?:www\.)?([^/]+)', url or "")
+    return m.group(1) if m else "—"
+
 def case_rows():
     rows = []
     for c in cases:
@@ -77,11 +81,13 @@ def case_rows():
         imp_cls = {"상":"imp-high","중":"imp-mid","하":"imp-low"}.get(c.get("importance","중"),"imp-mid")
         url = c.get("url","")
         nm = f'<a href="{url}" target="_blank">{c["name_ko"]}</a>' if url else c["name_ko"]
+        src = f'<a href="{url}" target="_blank">{source_host(url)} ↗</a>' if url else "—"
         rows.append(f'<tr><td><code>{c["id"]}</code></td><td>{flag} {nm}</td>'
                     f'<td>{c["domain"]}</td><td>{c.get("org","—")}</td>'
                     f'<td>{c.get("year","—")}</td>'
                     f'<td><span class="imp {imp_cls}">{c.get("importance","중")}</span></td>'
-                    f'<td class="tech-cell">{ct}</td><td class="tech-cell">{dt}</td></tr>')
+                    f'<td class="tech-cell">{ct}</td><td class="tech-cell">{dt}</td>'
+                    f'<td style="font-size:11px;white-space:nowrap">{src}</td></tr>')
     return "\n".join(rows)
 
 domain_cards_html = "\n".join(domain_card(d) for d in DOMAIN_META)
@@ -157,7 +163,7 @@ SIDEBAR = """
     <a href="#scope" class="l2">1.2 수집 범위</a>
     <a href="#taxonomy">2. 기술군 분류 체계</a>
     <a href="#common-tech" class="l2">2.1 공통 기술 (IT 범용)</a>
-    <a href="#spec-tech" class="l2">2.2 분야 특화 기술</a>
+    <a href="#spec-tech" class="l2">2.2 분야 기술</a>
     <a href="#domains">3. 분야별 사례 분석</a>
     <a href="#domain-drug" class="l2">3.1 신약개발</a>
     <a href="#domain-bio" class="l2">3.2 바이오·의료</a>
@@ -336,7 +342,7 @@ def build_html():
 <div class="cover">
   <div class="cover-kird">KIRD · AI 과학기술 혁신 사례 분석</div>
   <h1>AI 과학기술 혁신 사례<br><span>기술군 매핑 분석 보고서</span></h1>
-  <div class="cover-sub">AI 활용 과학기술 혁신 사례 100건의 체계적 수집·분석 및 공통·분야특화 기술군 매핑 결과</div>
+  <div class="cover-sub">AI 활용 과학기술 혁신 사례 100건의 체계적 수집·분석 및 공통·분야 기술군 매핑 결과</div>
   <div class="cover-badges">
     <span class="cover-badge">📅 2026년 6월</span>
     <span class="cover-badge">📋 총 100건 사례</span>
@@ -348,7 +354,7 @@ def build_html():
 
 <h2 id="overview"><span class="sec-num">1</span> 분석 개요</h2>
 <h3 id="methodology">1.1 목적 및 방법론</h3>
-<p>본 분석은 AI 기술을 활용하여 과학기술을 혁신한 국내외 사례를 체계적으로 수집·분류하고, 각 사례에 필요한 기술군을 <strong>공통 기술(IT 범용)</strong>과 <strong>분야 특화 기술(도메인 의존)</strong>로 분류한 후 D3.js 기반 인터랙티브 시각화 지식맵을 구축하는 것을 목표로 한다.</p>
+<p>본 분석은 AI 기술을 활용하여 과학기술을 혁신한 국내외 사례를 체계적으로 수집·분류하고, 각 사례에 필요한 기술군을 <strong>공통 기술(IT 범용)</strong>과 <strong>분야 기술(도메인 의존)</strong>로 분류한 후 D3.js 기반 인터랙티브 시각화 지식맵을 구축하는 것을 목표로 한다.</p>
 <div class="callout"><strong>수집 방법:</strong> Claude AI 다중 에이전트가 10개 과학기술 분야를 병렬 탐색하여 국내외 사례를 자동 수집. 각 사례에 출처 URL·성과 수치·활용 기술을 명시하고, 중복 제거 후 최종 100건을 확정하였다.</div>
 
 <h3 id="scope">1.2 분석 범위</h3>
@@ -356,12 +362,12 @@ def build_html():
   <div class="stat-card"><div class="stat-num">100</div><div class="stat-label">총 수집 사례</div></div>
   <div class="stat-card s2"><div class="stat-num">80</div><div class="stat-label">해외 사례</div></div>
   <div class="stat-card s3"><div class="stat-num">20</div><div class="stat-label">국내 사례</div></div>
-  <div class="stat-card s4"><div class="stat-num">70</div><div class="stat-label">기술군 (공통20+특화50)</div></div>
+  <div class="stat-card s4"><div class="stat-num">70</div><div class="stat-label">기술군 (공통20+분야50)</div></div>
 </div>
 
 <h2 id="taxonomy"><span class="sec-num">2</span> 기술군 분류 체계</h2>
-<p>기술군 분류는 <strong>도메인 지식 의존성</strong>을 핵심 기준으로 한다. 특정 과학기술 도메인 지식 없이 여러 분야에 활용 가능한 IT 기반 AI 기술은 <em>공통 기술</em>로, 해당 도메인 지식과 결합해야만 의미 있는 결과를 낼 수 있는 기술은 <em>분야 특화 기술</em>로 분류한다.</p>
-<div class="callout info"><strong>예외 규칙:</strong> 특정 분야에만 최적화된 IT 기술도 특화 기술로 분류. 예: 단백질 구조 예측 GNN(신약개발 특화), 기후 수치 모델링(기후·환경 특화)</div>
+<p>기술군 분류는 <strong>도메인 지식 의존성</strong>을 핵심 기준으로 한다. 특정 과학기술 도메인 지식 없이 여러 분야에 활용 가능한 IT 기반 AI 기술은 <em>공통 기술</em>로, 해당 도메인 지식과 결합해야만 의미 있는 결과를 낼 수 있는 기술은 <em>분야 기술</em>로 분류한다.</p>
+<div class="callout info"><strong>예외 규칙:</strong> 특정 분야에만 최적화된 IT 기술도 분야 기술로 분류. 예: 단백질 구조 예측 GNN(신약개발 분야), 기후 수치 모델링(기후·환경 분야)</div>
 
 <h3 id="common-tech">2.1 공통 기술군 (IT 범용, T01–T20)</h3>
 <div class="chart-wrap"><div class="chart-title">공통 기술 활용 빈도 Top 10 (전체 100건 대비)</div><svg id="chart-common" height="280"></svg></div>
@@ -369,8 +375,8 @@ def build_html():
 {tech_rows(common_techs)}
 </tbody></table></div>
 
-<h3 id="spec-tech">2.2 분야 특화 기술군 (T21–T70)</h3>
-<div class="chart-wrap"><div class="chart-title">분야 특화 기술 활용 빈도 Top 10</div><svg id="chart-spec" height="280"></svg></div>
+<h3 id="spec-tech">2.2 분야 기술군 (T21–T70)</h3>
+<div class="chart-wrap"><div class="chart-title">분야 기술 활용 빈도 Top 10</div><svg id="chart-spec" height="280"></svg></div>
 <div class="table-wrap"><table><thead><tr><th>ID</th><th>기술명</th><th>분류</th><th>활용</th><th>활용률</th></tr></thead><tbody>
 {tech_rows(spec_techs)}
 </tbody></table></div>
@@ -465,7 +471,7 @@ def build_html():
   <select id="if"><option value="">전체 중요도</option><option value="상">상</option><option value="중">중</option><option value="하">하</option></select>
 </div>
 <div class="table-wrap"><table id="case-table">
-<thead><tr><th>ID</th><th>사례명</th><th>분야</th><th>기관</th><th>연도</th><th>중요도</th><th>공통 기술</th><th>특화 기술</th></tr></thead>
+<thead><tr><th>ID</th><th>사례명</th><th>분야</th><th>기관</th><th>연도</th><th>중요도</th><th>공통 기술</th><th>분야 기술</th><th>출처</th></tr></thead>
 <tbody id="case-tbody">
 {case_rows()}
 </tbody></table></div>

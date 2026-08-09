@@ -47,6 +47,7 @@
   .link { stroke-opacity: 0.45; stroke-width: 1.2; }
   .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; }
+  .legend-item b { color: var(--text); background: var(--surface2); border-radius: 10px; padding: 1px 8px; font-size: 0.76rem; }
   .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; text-align: center; }
@@ -102,7 +103,7 @@
     <div class="badge">해외 <b>80</b>건</div>
     <div class="badge">국내 <b>20</b>건</div>
     <div class="badge">공통기술 <b>20</b>개</div>
-    <div class="badge">특화기술 <b>50</b>개</div>
+    <div class="badge">분야기술 <b>50</b>개</div>
     <div class="badge">분야 <b>10</b>개</div>
   </div>
   <a href="report.html" class="nav-btn">📄 분석 보고서</a>
@@ -135,15 +136,15 @@
     <label>분야:</label><select id="net-dom" onchange="initNetwork()"><option value="all">전체</option></select>
     <label>기술 유형:</label>
     <select id="net-ttype" onchange="initNetwork()">
-      <option value="all">전체</option><option value="common">공통</option><option value="specialized">특화</option>
+      <option value="all">전체</option><option value="common">공통</option><option value="specialized">분야</option>
     </select>
     <button class="btn-reset" onclick="document.getElementById('net-dom').value='all';document.getElementById('net-ttype').value='all';initNetwork()">초기화</button>
   </div>
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#6c63ff"></div>사례(해외)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#81c784"></div>사례(국내)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--common)"></div>공통기술</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--specialized)"></div>특화기술</div>
+  <div class="legend" id="net-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#6c63ff"></div>사례(해외) <b id="lg-case-os">0</b></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#81c784"></div>사례(국내) <b id="lg-case-dm">0</b></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--common)"></div>공통기술 <b id="lg-tech-cm">0</b></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--specialized)"></div>분야기술 <b id="lg-tech-sp">0</b></div>
   </div>
   <svg id="network-svg"></svg>
 </div>
@@ -153,10 +154,11 @@
     <label>분야:</label><select id="mat-dom" onchange="initMatrix()"><option value="all">전체</option></select>
     <label>기술 유형:</label>
     <select id="mat-ttype" onchange="initMatrix()">
-      <option value="all">전체</option><option value="common">공통</option><option value="specialized">특화</option>
+      <option value="all">전체</option><option value="common">공통</option><option value="specialized">분야</option>
     </select>
     <button class="btn-reset" onclick="document.getElementById('mat-dom').value='all';document.getElementById('mat-ttype').value='all';initMatrix()">초기화</button>
   </div>
+  <div class="legend" id="matrix-legend" style="margin-bottom:10px"></div>
   <div id="matrix-container"><svg id="matrix-svg"></svg></div>
 </div>
 
@@ -177,14 +179,14 @@
   <div class="case-table-wrap">
     <table><thead><tr>
       <th>#</th><th>사례명</th><th>기관</th><th>국가</th><th>분야</th>
-      <th>공통기술</th><th>분야특화기술</th><th>연도</th><th>중요도</th>
+      <th>공통기술</th><th>분야기술</th><th>연도</th><th>중요도</th>
     </tr></thead><tbody id="case-tbody"></tbody></table>
   </div>
   <div id="case-count"></div>
 </div>
 
 <div id="panel-domains" class="panel">
-  <p style="color:var(--text2);margin-bottom:16px;font-size:0.88rem">각 분야별 상세 지식맵 페이지로 이동합니다. 대표 사례 카드, D3.js 역량 체계도, 공통/특화 기술 분류가 포함됩니다.</p>
+  <p style="color:var(--text2);margin-bottom:16px;font-size:0.88rem">각 분야별 상세 지식맵 페이지로 이동합니다. 대표 사례 카드, D3.js 역량 체계도, 공통/분야 기술 분류가 포함됩니다.</p>
   <div class="domain-links" id="dlinks2"></div>
 </div>
 
@@ -195,6 +197,10 @@ let D = null, TM = {};
 const ICONS = {'신약개발':'💊','바이오·의료':'🏥','소재':'⚗️','에너지':'⚡','기후·환경':'🌍','제조':'🏭','우주·항공':'🚀','농식품':'🌾','수학·기초과학':'🔢','로봇·자율화':'🤖'};
 const DFILES = {'신약개발':'domain/drug_discovery.html','바이오·의료':'domain/biomedical.html','소재':'domain/materials.html','에너지':'domain/energy.html','기후·환경':'domain/climate.html','제조':'domain/manufacturing.html','우주·항공':'domain/space.html','농식품':'domain/agriculture.html','수학·기초과학':'domain/math_science.html','로봇·자율화':'domain/robotics.html'};
 const DCOLORS = ['#6c63ff','#00c6ff','#f7971e','#4dd0e1','#f06292','#81c784','#ffb74d','#4fc3f7','#e57373','#ba68c8'];
+function domainColor(domain) {
+  const i = D ? D.metadata.domains.indexOf(domain) : -1;
+  return i >= 0 ? DCOLORS[i] : 'var(--specialized)';
+}
 
 function switchTab(id) {
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['overview','network','matrix','cases','domains'][i] === id));
@@ -226,7 +232,7 @@ function buildOverview() {
 
   document.getElementById('stats-grid').innerHTML = [
     {n:100, l:'총 수집 사례'},{n:80,l:'해외 사례'},{n:20,l:'국내 사례'},
-    {n:20,l:'공통 기술(IT 범용)'},{n:50,l:'분야 특화 기술'},{n:10,l:'대상 과학기술 분야'}
+    {n:20,l:'공통 기술(IT 범용)'},{n:50,l:'분야 기술'},{n:10,l:'대상 과학기술 분야'}
   ].map(s=>`<div class="stat-card"><div class="num">${s.n}</div><div class="lbl">${s.l}</div></div>`).join('');
 
   const maxD = Math.max(...Object.values(domCount));
@@ -294,6 +300,12 @@ function initNetwork() {
     ...cases.map(c=>({...c, ntype:'case'})),
     ...techs.map(t=>({...t, ntype:'tech'}))
   ];
+
+  document.getElementById('lg-case-os').textContent = cases.filter(c=>c.region_type==='overseas').length;
+  document.getElementById('lg-case-dm').textContent = cases.filter(c=>c.region_type!=='overseas').length;
+  document.getElementById('lg-tech-cm').textContent = techs.filter(t=>t.type==='common').length;
+  document.getElementById('lg-tech-sp').textContent = techs.filter(t=>t.type==='specialized').length;
+
   const links = [];
   cases.forEach(c=>{
     [...(c.common_techs||[]),...(c.domain_techs||[])].forEach(tid=>{
@@ -330,7 +342,7 @@ function initNetwork() {
     .attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width',1)
     .on('mouseover', (evt,d)=>{
       if(d.ntype==='case') showTip(evt, `<b>${d.name_ko}</b><br>기관: ${d.org}<br>분야: ${d.domain}<br>연도: ${d.year}<br>중요도: ${d.importance}`);
-      else { const n=D.cases.filter(c=>[...(c.common_techs||[]),...(c.domain_techs||[])].includes(d.id)).length; showTip(evt,`<b>${d.name}</b><br>유형: ${d.type==='common'?'공통 기술':'분야 특화'}<br>활용 사례: ${n}건`); }
+      else { const n=D.cases.filter(c=>[...(c.common_techs||[]),...(c.domain_techs||[])].includes(d.id)).length; showTip(evt,`<b>${d.name}</b><br>유형: ${d.type==='common'?'공통 기술':'분야 기술'}<br>활용 사례: ${n}건`); }
     })
     .on('mouseout', hideTip);
 
@@ -355,6 +367,11 @@ function initMatrix() {
   let techs = D.technologies.filter(t=>usedTids.has(t.id));
   if (tFilter !== 'all') techs = techs.filter(t=>t.type===tFilter);
 
+  const usedDomains = D.metadata.domains.filter(d=>techs.some(t=>t.domain===d));
+  document.getElementById('matrix-legend').innerHTML =
+    '<div class="legend-item"><div class="legend-dot" style="background:var(--common)"></div>공통기술</div>' +
+    usedDomains.map(d=>`<div class="legend-item"><div class="legend-dot" style="background:${domainColor(d)}"></div>${ICONS[d]||''} ${d}</div>`).join('');
+
   const cs = 16, mL = 160, mT = 120;
   const W = mL + techs.length * cs + 20;
   const H = mT + cases.length * cs + 20;
@@ -366,7 +383,7 @@ function initMatrix() {
       .attr('x', mL + j*cs + cs/2).attr('y', mT-8)
       .attr('transform',`rotate(-60,${mL+j*cs+cs/2},${mT-8})`)
       .attr('text-anchor','start')
-      .attr('fill', t.type==='common'?'var(--common)':'var(--specialized)')
+      .attr('fill', t.type==='common'?'var(--common)':domainColor(t.domain))
       .attr('font-size',9).text(t.name);
   });
 
@@ -382,7 +399,7 @@ function initMatrix() {
         .attr('width',cs-2).attr('height',cs-2).attr('rx',2)
         .attr('fill', ct.has(t.id)?(t.type==='common'?'var(--common)':'var(--specialized)'):'var(--surface2)')
         .attr('opacity', ct.has(t.id)?0.85:0.4)
-        .on('mouseover', evt=>showTip(evt, ct.has(t.id)?`<b>${c.name_ko}</b><br>→ <b>${t.name}</b> (${t.type==='common'?'공통':'특화'})`:`(연결 없음)`))
+        .on('mouseover', evt=>showTip(evt, ct.has(t.id)?`<b>${c.name_ko}</b><br>→ <b>${t.name}</b> (${t.type==='common'?'공통':'분야'})`:`(연결 없음)`))
         .on('mouseout', hideTip);
     });
   });

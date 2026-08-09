@@ -99,7 +99,7 @@ td{{padding:7px 10px;border-bottom:1px solid var(--bd);vertical-align:top}}tr:ho
   <div class="badges">
     <div class="badge">사례 <b>{len(cases)}</b>건</div>
     <div class="badge">공통기술 <b>{len(uc)}</b>종</div>
-    <div class="badge">특화기술 <b>{len(us)}</b>종</div>
+    <div class="badge">분야기술 <b>{len(us)}</b>종</div>
     <div class="badge">분야: <b>{en}</b></div>
     <div class="badge">핵심기술: <b>{H.escape(meta.get("key",""))}</b></div>
   </div>
@@ -115,20 +115,20 @@ td{{padding:7px 10px;border-bottom:1px solid var(--bd);vertical-align:top}}tr:ho
       <div class="li"><div class="ld" style="background:#6c63ff"></div>사례(해외)</div>
       <div class="li"><div class="ld" style="background:#81c784"></div>사례(국내)</div>
       <div class="li"><div class="ld" style="background:var(--cm)"></div>공통기술</div>
-      <div class="li"><div class="ld" style="background:var(--sp)"></div>특화기술</div>
+      <div class="li"><div class="ld" style="background:var(--sp)"></div>분야기술</div>
     </div>
     <svg id="dn"></svg>
     <div class="stitle" style="margin-top:18px">③ 기술군 분류</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div><div style="font-size:0.8rem;font-weight:700;color:var(--cm);margin-bottom:8px">공통 기술 (IT 범용)</div>{bar(cs_,"var(--cm)")}</div>
-      <div><div style="font-size:0.8rem;font-weight:700;color:var(--sp);margin-bottom:8px">분야 특화 기술</div>{bar(ss_,"var(--sp)")}</div>
+      <div><div style="font-size:0.8rem;font-weight:700;color:var(--sp);margin-bottom:8px">분야 기술</div>{bar(ss_,"var(--sp)")}</div>
     </div>
   </div>
 </div>
 <div class="full">
   <div class="stitle">④ {domain} 전체 사례 ({len(cases)}건)</div>
   <div style="overflow-x:auto">
-  <table><thead><tr><th>사례명</th><th>기관</th><th>지역</th><th>공통기술</th><th>특화기술</th><th>연도</th><th>중요도</th></tr></thead>
+  <table><thead><tr><th>사례명</th><th>기관</th><th>지역</th><th>공통기술</th><th>분야기술</th><th>연도</th><th>중요도</th></tr></thead>
   <tbody>{rows()}</tbody></table></div>
 </div>
 <div class="tp" id="tp"></div>
@@ -144,7 +144,7 @@ sv.call(zoom);const g=sv.append("g");
 const sim=d3.forceSimulation(NJ).force("link",d3.forceLink(LJ).id(d=>d.id).distance(60)).force("charge",d3.forceManyBody().strength(-100)).force("center",d3.forceCenter(W/2,H2/2)).force("collision",d3.forceCollide(15));
 const lk=g.append("g").selectAll("line").data(LJ).join("line").attr("stroke",d=>d.tt==="common"?"rgba(77,208,225,0.5)":"rgba(240,98,146,0.4)").attr("stroke-width",1.2).attr("stroke-opacity",0.5);
 const ng=g.append("g").selectAll("g").data(NJ).join("g").call(d3.drag().on("start",(e,d)=>{{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;}}).on("drag",(e,d)=>{{d.fx=e.x;d.fy=e.y;}}).on("end",(e,d)=>{{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}}));
-ng.append("circle").attr("r",d=>d.type==="case"?7:5).attr("fill",d=>d.type==="case"?(d.region==="overseas"?"#6c63ff":"#81c784"):(d.tt==="common"?"var(--cm)":"var(--sp)")).attr("stroke","rgba(255,255,255,0.3)").attr("stroke-width",1).on("mouseover",(e,d)=>st(e,d.type==="case"?`<b>${{d.name}}</b>`:`<b>${{d.name}}</b><br>${{d.tt==="common"?"공통기술":"특화기술"}}`)).on("mouseout",ht);
+ng.append("circle").attr("r",d=>d.type==="case"?7:5).attr("fill",d=>d.type==="case"?(d.region==="overseas"?"#6c63ff":"#81c784"):(d.tt==="common"?"var(--cm)":"var(--sp)")).attr("stroke","rgba(255,255,255,0.3)").attr("stroke-width",1).on("mouseover",(e,d)=>st(e,d.type==="case"?`<b>${{d.name}}</b>`:`<b>${{d.name}}</b><br>${{d.tt==="common"?"공통기술":"분야기술"}}`)).on("mouseout",ht);
 ng.append("text").attr("dy",-9).attr("text-anchor","middle").attr("font-size",8).attr("fill","var(--txt)").attr("pointer-events","none").text(d=>d.type==="tech"?(d.name.length>7?d.name.substring(0,7)+"…":d.name):"");
 sim.on("tick",()=>{{lk.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);ng.attr("transform",d=>`translate(${{d.x}},${{d.y}})`)}});
 }})();
