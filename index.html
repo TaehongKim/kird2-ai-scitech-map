@@ -362,6 +362,11 @@ function initMatrix() {
   const tFilter = document.getElementById('mat-ttype').value;
   let cases = D.cases;
   if (dFilter !== 'all') cases = cases.filter(c=>c.domain===dFilter);
+  cases = [...cases].sort((a,b)=>{
+    const da = D.metadata.domains.indexOf(a.domain), db = D.metadata.domains.indexOf(b.domain);
+    if (da !== db) return da - db;
+    return a.name_ko.localeCompare(b.name_ko, 'ko');
+  });
   const usedTids = new Set();
   cases.forEach(c=>[...(c.common_techs||[]),...(c.domain_techs||[])].forEach(t=>usedTids.add(t)));
   let techs = D.technologies.filter(t=>usedTids.has(t.id));
