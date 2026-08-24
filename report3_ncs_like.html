@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>AI 활용역량 체계(안) — NCS 형식 차용 v0.1 (Phase 3)</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;--accent:#58a6ff;--green:#3fb950;--orange:#d29922;--red:#f85149;--purple:#bc8cff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.7}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:12px}
+.nav-title{font-size:15px;font-weight:700;color:var(--accent)}
+.vb{background:var(--purple);color:#000;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.nav-links{margin-left:auto;display:flex;gap:8px}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:12px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);transition:.2s}
+.nav-links a:hover{color:var(--accent);border-color:var(--accent)}
+.layout{display:flex;min-height:100vh}
+.toc{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:49px;height:calc(100vh - 49px);overflow-y:auto}
+.toc h3{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.toc a{display:block;color:var(--text2);text-decoration:none;font-size:11px;padding:4px 8px;border-radius:4px;margin-bottom:1px;border-left:2px solid transparent}
+.toc a:hover{color:var(--text);background:var(--bg3)}
+.toc .sub{padding-left:12px;font-size:10px}
+.content{flex:1;padding:32px 40px;max-width:900px}
+.cover{text-align:center;padding:36px 0 28px;border-bottom:2px solid var(--border);margin-bottom:28px}
+.cover h1{font-size:23px;font-weight:700;margin-bottom:6px}
+.cover .sub{color:var(--text2);font-size:13px;margin-bottom:14px;line-height:1.6}
+.cover-meta{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text3)}
+.cover-meta span b{color:var(--text2)}
+.sec{margin-bottom:36px}
+.h1{font-size:18px;font-weight:700;color:var(--accent);margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid var(--border);scroll-margin-top:65px}
+.h2{font-size:15px;font-weight:700;color:var(--text);margin:18px 0 8px;scroll-margin-top:65px}
+p{color:var(--text2);margin-bottom:9px}
+p b,p strong{color:var(--text)}
+ul,ol{color:var(--text2);margin:0 0 12px 20px}
+li{margin-bottom:5px}
+.db{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px;scroll-margin-top:65px}
+.db-hd{padding:12px 16px 9px;display:flex;align-items:center;gap:9px;background:var(--bg3)}
+.db-n{width:30px;height:30px;border-radius:50%;background:var(--purple);color:#000;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.db-tt{font-size:15px;font-weight:700}
+.db-en{font-size:10px;color:var(--text3)}
+.db-pos{margin-left:auto;font-size:10px;padding:2px 7px;border-radius:10px;flex-shrink:0;background:rgba(210,153,34,.2);color:var(--orange);border:1px solid rgba(210,153,34,.4)}
+.db-bd{padding:14px 16px}
+.db-sum{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6}
+.db-code{font-size:10px;color:var(--text3);font-family:Consolas,monospace}
+.st-lbl{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.st-row{display:flex;gap:9px;margin-bottom:9px}
+.st-n{width:22px;height:22px;border-radius:4px;background:rgba(188,140,255,.2);color:var(--purple);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.st-b h4{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.st-b p{font-size:11px;color:var(--text2);margin-bottom:2px}
+.st-b .ref{font-size:10px;color:var(--text3);font-style:italic}
+.st-b .ex{font-size:10px;color:var(--purple);background:rgba(188,140,255,.08);border-radius:4px;padding:2px 7px;display:inline-block;margin-top:2px;line-height:1.5}
+.tbl{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:11px;display:block;overflow-x:auto}
+.tbl th{background:var(--bg3);padding:7px 9px;border:1px solid var(--border);text-align:left;color:var(--text2);white-space:nowrap}
+.tbl td{padding:6px 9px;border:1px solid var(--border);vertical-align:top}
+.tbl tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.co{background:rgba(88,166,255,.08);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:11px 14px;margin:12px 0;font-size:12px;color:var(--text2)}
+.co b{color:var(--text)}
+.co-w{background:rgba(210,153,34,.08);border-left-color:var(--orange)}
+.co-w b{color:var(--orange)}
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:14px 24px;text-align:center;color:var(--text3);font-size:11px;margin-top:36px}
+@media(max-width:900px){.toc{display:none}.content{padding:16px}.layout{display:block}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-title">AI 활용역량 체계(안)</div>
+  <div class="vb">Phase 3 · Draft v0.1</div>
+  <div class="nav-links">
+    <a href="index.html">📊 사례-기술 시각화 맵 →</a>
+    <a href="report_v2.html">← 사례 보고서 v2.0</a>
+  </div>
+</nav>
+<div class="layout">
+<nav class="toc">
+  <h3>목차</h3>
+  <a href="#cover">표지</a>
+  <a href="#pos">Ⅰ. 문서 성격 및 포지셔닝</a>
+  <a href="#method">Ⅱ. 방법론 — 사례→능력단위 변환 절차</a>
+  <a href="#dom1">Ⅲ. 로봇·자율화 — AI 자율로봇 개발(안)</a>
+  <a href="#u1-1" class="sub">1. 휴머노이드·산업로봇 자율 제어</a>
+  <a href="#u1-2" class="sub">2. 자율 실험 로봇 화학합성 계획·제어</a>
+  <a href="#u1-3" class="sub">3. 이기종 로봇·설비 통합 운영</a>
+  <a href="#dom2">Ⅳ. 신약개발 — AI 신약개발(안)</a>
+  <a href="#u2-1" class="sub">1. 단백질·분자 구조 AI 예측</a>
+  <a href="#u2-2" class="sub">2. AI 신약후보 생성·표적상호작용 예측</a>
+  <a href="#u2-3" class="sub">3. AI 문헌기반 약물재창출·합성경로 예측</a>
+  <a href="#limits">Ⅴ. 한계 및 향후 검증 과제</a>
+  <a href="#appendix">Ⅵ. 부록 — 근거 사례 전체 목록</a>
+</nav>
+<div class="content">
+
+<div class="cover" id="cover">
+  <h1>AI 활용역량 체계(안)<br>— NCS 형식을 차용한 AI 활용역량 체계, 대표 도메인 2종 시범 적용</h1>
+  <div class="sub">report2(사례-기술군 매핑, <code>case_tech_map.json</code>) 100개 사례를 국가직무능력표준(NCS)의 능력단위 형식으로 재구성한 시범 문서 · <strong>Phase 3</strong></div>
+  <div class="cover-meta">
+    <span><b>대상 도메인</b> 로봇·자율화(8건) · 신약개발(14건)</span>
+    <span><b>능력단위</b> 6개(안)</span>
+    <span><b>근거사례</b> 22건 전건 명시</span>
+    <span><b>버전</b> v0.1 (2026-08-23)</span>
+  </div>
+</div>
+
+<div class="sec" id="pos">
+  <div class="h1">Ⅰ. 문서 성격 및 포지셔닝</div>
+  <div class="co co-w">
+    <b>⚠ 이 문서는 공식 NCS(국가직무능력표준)가 아닙니다.</b><br>
+    국가직무능력표준(NCS)은 산업현장 전문가 워크숍(직무분석)을 거쳐 능력단위·수준(1~8)·평가지침·직업기초능력까지 검증한 표준입니다.
+    본 문서는 <b>report2에서 웹 수집한 AI 혁신 사례의 기술 태그를 NCS의 서술 형식(능력단위 → 능력단위요소 → 수행준거 → 지식·기술·태도)에 맞추어 재구성한 시범 문서</b>로,
+    전문가 직무분석 검증을 거치지 않았습니다. 아래와 같이 명확히 구분합니다.
+  </div>
+  <table class="tbl">
+    <tr><th>구분</th><th>공식 NCS</th><th>본 문서(AI 활용역량 체계안)</th></tr>
+    <tr><td>도출 방식</td><td>산업현장 전문가 워크숍(하향식 직무분석)</td><td>웹 수집 사례의 기술 태그 클러스터링(상향식)</td></tr>
+    <tr><td>능력단위요소·수행준거</td><td>전문가 합의로 확정</td><td>사례의 problem/outcome 문장을 일반화해 작성 — <b>초안</b></td></tr>
+    <tr><td>수준(1~8) 및 경력연차</td><td>직능수준 조사로 검증</td><td>미표기(추정 불가) — 표기하지 않음</td></tr>
+    <tr><td>평가지침 / 직업기초능력 매핑</td><td>제공</td><td>미제공(향후 과제)</td></tr>
+    <tr><td>적용범위 및 작업상황</td><td>고려사항·자료·장비 목록</td><td><b>근거 사례</b>(사례ID·기관·출처)로 대체</td></tr>
+  </table>
+  <p>즉 이 문서의 정확한 성격은 <b>"NCS 형식을 차용한 AI 활용역량 체계(안)"</b>이며, 교육과정 설계의 <b>초안·아이디어 소스</b>로 활용하되, 훈련기준·자격 근거로 사용하려면 별도의 산업현장 전문가 검증이 필요합니다.</p>
+</div>
+
+<div class="sec" id="method">
+  <div class="h1">Ⅱ. 방법론 — 사례 → 능력단위 변환 절차</div>
+  <table class="tbl">
+    <tr><th>단계</th><th>내용</th></tr>
+    <tr><td>1. 도메인 선정</td><td><code>case_tech_map.json</code>의 10개 분야 중 사례가 풍부하고 자료/ncs 참고자료(로봇·바이오)와 대응되는 <b>로봇·자율화</b>, <b>신약개발</b> 2개 도메인을 시범 선정</td></tr>
+    <tr><td>2. 사례 클러스터링</td><td>도메인 내 사례를 <code>domain_techs</code>(분야 특화 기술) 조합 패턴 기준으로 그룹화 — 동일/유사 기술 조합을 쓰는 사례를 하나의 후보 능력단위로 묶음</td></tr>
+    <tr><td>3. 능력단위명 재서술</td><td>기술 클러스터를 NCS 관례에 맞춘 "~하기" 과업형 명칭으로 변환 (예: "산업용 휴머노이드 제어" 기술 태그 → "휴머노이드·산업로봇 자율 조작 제어 개발" 능력단위)</td></tr>
+    <tr><td>4. 능력단위요소·수행준거 작성</td><td>각 사례의 <code>problem</code>(해결 과제)·<code>outcome</code>(성과) 문장을 일반화하여 3~4개의 능력단위요소로 세분화</td></tr>
+    <tr><td>5. KSA(지식·기술·태도) 작성</td><td><code>common_techs</code>(공통기술)·<code>domain_techs</code>(분야기술) 태그를 지식·기술 항목으로 매핑, 태도는 도메인 특성에 맞춘 표준 문구로 작성</td></tr>
+    <tr><td>6. 근거 사례 연결</td><td>NCS의 "적용범위 및 작업상황"을 대체하여, 각 능력단위마다 근거가 된 사례 ID·사례명·기관·국가·연도를 표로 명시(추정치 없이 전건 추적 가능)</td></tr>
+  </table>
+</div>
+
+<!-- ===================== DOMAIN 1: 로봇·자율화 ===================== -->
+<div class="sec" id="dom1">
+  <div class="h1">Ⅲ. 로봇·자율화 — "AI 자율로봇 개발"(세분류안)</div>
+  <p>report2 로봇·자율화 도메인 8개 사례를 <code>domain_techs</code> 조합에 따라 3개 능력단위(안)로 클러스터링했습니다. 사례 수가 적어(8건) 능력단위별 근거 사례가 3~4건 수준으로, 공식 NCS 대비 표본이 얇다는 점에 유의해야 합니다.</p>
+
+  <div class="db" id="u1-1">
+    <div class="db-hd"><div class="db-n">1</div><div><div class="db-tt">휴머노이드·산업로봇 자율 조작 제어 개발</div><div class="db-en">Autonomous Control of Industrial/Humanoid Robots</div></div><div class="db-pos">잠정수준 (안)</div></div>
+    <div class="db-bd">
+      <div class="db-code">분류번호(가칭): AI3-ROB-01_26v0(안) · 정식 NCS 분류번호 아님</div>
+      <div class="db-sum"><b>능력단위 정의(안):</b> 파운데이션 모델과 강화학습 기반 정책을 활용하여 자연어·시각 지시를 실제 로봇의 조작·이동 동작으로 변환하고, 산업 현장에 실환경 배치·검증하는 능력이다.</div>
+      <div class="st-lbl">능력단위요소(안)</div>
+      <div class="st-row"><div class="st-n">1</div><div class="st-b"><h4>파운데이션 모델 기반 범용 작업 지시 해석하기</h4><p>사용자의 자연어·시각 지시를 로봇이 처리 가능한 작업 표현으로 변환할 수 있다. 사전 코딩 없이 신규 작업을 즉시 수행하도록 지시 해석 범위를 확장할 수 있다.</p><span class="ex">근거: C072(Boston Dynamics/TRI Atlas — 코딩 없이 새 기능 추가)</span></div></div>
+      <div class="st-row"><div class="st-n">2</div><div class="st-b"><h4>강화학습 기반 동작 제어 정책 학습하기</h4><p>시뮬레이션·실환경 상호작용을 통해 조작·이동 정책을 학습할 수 있다. 혼잡·악천후 등 비정형 조건에서의 판단 신뢰성을 검증할 수 있다.</p><span class="ex">근거: C080(ETRI 강화학습 자율주행 판단 — 복잡 교차로 인간 수준 판단)</span></div></div>
+      <div class="st-row"><div class="st-n">3</div><div class="st-b"><h4>비전-언어-행동(VLA) 모델로 지시-행동 매핑하기</h4><p>멀티모달 입력(시각·언어)을 실제 관절·구동 명령으로 매핑하여 훈련 외 신규 작업에도 대응할 수 있다.</p><span class="ex">근거: C100(Google DeepMind RT-2 — 훈련 외 작업 62% 성공)</span></div></div>
+      <div class="st-row"><div class="st-n">4</div><div class="st-b"><h4>실환경 배치·안전성 검증하기</h4><p>산업 현장(생산라인 등)에 로봇을 파일럿 배치하고 성능·안전 기준 충족 여부를 검증할 수 있다.</p><span class="ex">근거: C081(현대차그룹 전동식 아틀라스 — HMGMA 기술 검증)</span></div></div>
+      <table class="tbl">
+        <tr><th>구분</th><th>내용(사례 기술 태그 기반)</th></tr>
+        <tr><td>지식</td><td>파운데이션 모델·트랜스포머 구조 / 강화학습 정책 최적화 이론 / 컴퓨터 비전 인식 원리 / 멀티모달 정합 방식</td></tr>
+        <tr><td>기술</td><td>VLA(비전-언어-행동) 모델 파인튜닝 / 시뮬레이션 기반 정책 학습 / 실환경 파일럿 검증 설계</td></tr>
+        <tr><td>태도</td><td>안전을 최우선하는 검증 태도 / 반복 실패를 통한 점진적 개선 태도</td></tr>
+      </table>
+      <div class="st-lbl">근거 사례</div>
+      <table class="tbl">
+        <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th></tr>
+        <tr><td>C072</td><td>보스턴 다이나믹스 도요타 아틀라스 LBM</td><td>Boston Dynamics / Toyota Research Institute</td><td>미국</td><td>2025</td></tr>
+        <tr><td>C080</td><td>ETRI AI 강화학습 자율주행 판단</td><td>ETRI</td><td>한국</td><td>2023</td></tr>
+        <tr><td>C081</td><td>현대자동차그룹 전동식 아틀라스 AI 휴머노이드</td><td>현대자동차그룹 / Boston Dynamics</td><td>한국</td><td>2024</td></tr>
+        <tr><td>C100</td><td>Google DeepMind RT-2 비전-언어-행동 로봇 모델</td><td>Google DeepMind</td><td>미국/영국</td><td>2023</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="db" id="u1-2">
+    <div class="db-hd"><div class="db-n">2</div><div><div class="db-tt">자율 실험 로봇 화학합성 계획·제어</div><div class="db-en">Autonomous Robotic Chemistry Planning & Control</div></div><div class="db-pos">잠정수준 (안)</div></div>
+    <div class="db-bd">
+      <div class="db-code">분류번호(가칭): AI3-ROB-02_26v0(안) · 정식 NCS 분류번호 아님</div>
+      <div class="db-sum"><b>능력단위 정의(안):</b> 대형 언어 모델(LLM)·AI 에이전트를 활용하여 화학 합성 실험을 자율적으로 계획하고, 로봇 합성·분석 장비를 연동 제어하며, 실험 결과를 피드백하여 재계획하는 능력이다.</div>
+      <div class="st-lbl">능력단위요소(안)</div>
+      <div class="st-row"><div class="st-n">1</div><div class="st-b"><h4>LLM 기반 실험 계획 자동 생성하기</h4><p>복잡한 화학 합성 과제를 LLM·AI 에이전트로 분해하여 실행 가능한 실험 절차를 자동 설계할 수 있다.</p><span class="ex">근거: C073(CMU Coscientist — 복잡한 커플링 반응 4분 내 자율 설계·첫 시도 성공, Nature 2023)</span></div></div>
+      <div class="st-row"><div class="st-n">2</div><div class="st-b"><h4>자율 로봇 합성·분석 장비 연동 제어하기</h4><p>이동형 로봇과 합성기·UPLC-MS·NMR 등 분석 장비 간 샘플 이송·분석을 자율적으로 연동 제어할 수 있다.</p><span class="ex">근거: C074(이동형 자율 로봇 화학 탐색 — 로봇 합성기-UPLC-MS-NMR 자율 연동, Nature 2024)</span></div></div>
+      <div class="st-row"><div class="st-n">3</div><div class="st-b"><h4>실험 결과 피드백 기반 재계획하기</h4><p>실험 성공/실패 결과를 다음 실험 계획에 반영하는 반복 루프(active-learning loop)를 설계·운용할 수 있다.</p><span class="ex">근거: C073, C074 공통 — 자율 실험-분석-재계획 순환 구조</span></div></div>
+      <table class="tbl">
+        <tr><th>구분</th><th>내용(사례 기술 태그 기반)</th></tr>
+        <tr><td>지식</td><td>대형 언어 모델(LLM)·AI 에이전트 구조 / 자연어 처리(NLP) / 화학 합성 도메인 지식 / 실험장비 통신 프로토콜</td></tr>
+        <tr><td>기술</td><td>AI 에이전트 오케스트레이션 / 실험장비 자동화 연동(API 제어) / 실험-피드백 루프 설계</td></tr>
+        <tr><td>태도</td><td>실험 안전수칙 준수 태도 / 재현성 확보를 위한 기록·문서화 태도</td></tr>
+      </table>
+      <div class="st-lbl">근거 사례</div>
+      <table class="tbl">
+        <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th></tr>
+        <tr><td>C073</td><td>CMU Coscientist LLM 자율 화학 연구 로봇</td><td>Carnegie Mellon / Emerald Cloud Lab</td><td>미국</td><td>2023</td></tr>
+        <tr><td>C074</td><td>이동형 자율 로봇 화학 탐색 Nature 2024</td><td>복수 연구기관</td><td>국제</td><td>2024</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="db" id="u1-3">
+    <div class="db-hd"><div class="db-n">3</div><div><div class="db-tt">이기종 로봇·설비 통합 운영 및 공정지식 전이</div><div class="db-en">Heterogeneous Robot/Facility Orchestration & Process Knowledge Transfer</div></div><div class="db-pos">잠정수준 (안)</div></div>
+    <div class="db-bd">
+      <div class="db-code">분류번호(가칭): AI3-ROB-03_26v0(안) · 정식 NCS 분류번호 아님</div>
+      <div class="db-sum"><b>능력단위 정의(안):</b> 이기종 로봇·설비를 통합 오케스트레이션하고, 생성형 AI로 숙련 작업자의 암묵적 공정 지식을 명시적 파라미터로 전이하여 무인 공정을 운영·최적화하는 능력이다.</div>
+      <div class="st-lbl">능력단위요소(안)</div>
+      <div class="st-row"><div class="st-n">1</div><div class="st-b"><h4>다종 로봇·설비 통합 오케스트레이션 설계하기</h4><p>AMR·OHT·협동로봇·휴머노이드 등 이기종 로봇·설비를 하나의 운영 체계로 통합 설계할 수 있다.</p><span class="ex">근거: C077(KAIST 카이로스 이기종 로봇 무인공장 — AMR·OHT·협동로봇·휴머노이드 통합 운영)</span></div></div>
+      <div class="st-row"><div class="st-n">2</div><div class="st-b"><h4>생성형 AI로 숙련공정 지식 전이하기</h4><p>고숙련 작업자의 직관에 의존하던 공정 최적화 지식을 생성형 AI·LLM 기반 시스템으로 전이·명시화할 수 있다.</p><span class="ex">근거: C078(KAIST AI 사출공정 생성형 AI 자율 최적화 — LLM 기반 제조 공정 지식 전이 시스템)</span></div></div>
+      <div class="st-row"><div class="st-n">3</div><div class="st-b"><h4>통합 운영 성능 모니터링·최적화하기</h4><p>통합 운영 중인 로봇·설비의 성능 지표를 모니터링하고 공정 파라미터를 지속 개선할 수 있다.</p><span class="ex">근거: C077, C078 공통 — 무인공장/공정 자율 최적화 운영 실적</span></div></div>
+      <table class="tbl">
+        <tr><th>구분</th><th>내용(사례 기술 태그 기반)</th></tr>
+        <tr><td>지식</td><td>멀티에이전트 조정 이론 / 생성형 AI·LLM 기반 지식전이 방식 / 제조 공정 데이터 해석</td></tr>
+        <tr><td>기술</td><td>무인공장 통합 아키텍처 설계 / LLM 기반 공정 파라미터 추천 시스템 구현</td></tr>
+        <tr><td>태도</td><td>현장 작업자와의 협업적 지식 발굴 태도 / 지속 개선(카이젠) 지향 태도</td></tr>
+      </table>
+      <div class="st-lbl">근거 사례</div>
+      <table class="tbl">
+        <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th></tr>
+        <tr><td>C077</td><td>KAIST 카이로스 이기종 로봇 무인공장</td><td>KAIST</td><td>한국</td><td>2024</td></tr>
+        <tr><td>C078</td><td>KAIST AI 사출공정 생성형 AI 자율 최적화</td><td>KAIST 유승화 교수 연구팀</td><td>한국</td><td>2024</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DOMAIN 2: 신약개발 ===================== -->
+<div class="sec" id="dom2">
+  <div class="h1">Ⅳ. 신약개발 — "AI 신약개발"(세분류안)</div>
+  <p>report2 신약개발 도메인 14개 사례를 <code>domain_techs</code> 조합에 따라 3개 능력단위(안)로 클러스터링했습니다. 단백질 구조 예측·de novo 설계·표적 상호작용 예측 계열이 상당수 중복되어 있어, 사례를 가장 대표적인 기술 조합 1곳에만 배치했습니다(사례는 실제로는 복수 능력단위에 걸치는 경우가 많음에 유의).</p>
+
+  <div class="db" id="u2-1">
+    <div class="db-hd"><div class="db-n">1</div><div><div class="db-tt">단백질·분자 구조 AI 예측</div><div class="db-en">AI-based Protein & Molecular Structure Prediction</div></div><div class="db-pos">잠정수준 (안)</div></div>
+    <div class="db-bd">
+      <div class="db-code">분류번호(가칭): AI3-DRG-01_26v0(안) · 정식 NCS 분류번호 아님</div>
+      <div class="db-sum"><b>능력단위 정의(안):</b> 딥러닝·확산 모델과 분자동역학·자유에너지 계산을 결합하여 단백질 3차 구조와 단백질-리간드 결합 구조를 예측·검증하는 능력이다.</div>
+      <div class="st-lbl">능력단위요소(안)</div>
+      <div class="st-row"><div class="st-n">1</div><div class="st-b"><h4>딥러닝 기반 단백질 3차구조 예측하기</h4><p>아미노산 서열로부터 단백질의 3차원 구조를 높은 정확도로 예측할 수 있다.</p><span class="ex">근거: C001(AlphaFold2 — CASP14 1위 GDT 92.4, 2억 개+ 구조 공개)</span></div></div>
+      <div class="st-row"><div class="st-n">2</div><div class="st-b"><h4>분자동역학·자유에너지(FEP) 기반 결합친화도 계산하기</h4><p>후보 물질과 표적 단백질 간 결합 자유에너지를 계산하여 결합친화도를 정량 예측할 수 있다.</p><span class="ex">근거: C006(Relay Therapeutics Dynamo — 정적 구조를 넘어선 동적 druggable 표적 발굴)</span></div></div>
+      <div class="st-row"><div class="st-n">3</div><div class="st-b"><h4>단백질-리간드 상호작용 구조 예측·검증하기</h4><p>생성모델 기반으로 신규 단백질 구조를 설계하거나 단백질-소분자 결합 구조를 예측·검증할 수 있다.</p><span class="ex">근거: C007(RFdiffusion — de novo 단백질 설계, Nature 2023), C008(AlphaFold3 — 단백질-분자 상호작용 예측 50% 향상)</span></div></div>
+      <table class="tbl">
+        <tr><th>구분</th><th>내용(사례 기술 태그 기반)</th></tr>
+        <tr><td>지식</td><td>트랜스포머·확산 모델 구조 / 단백질 접힘(folding) 원리 / 분자동역학·자유에너지 계산 이론</td></tr>
+        <tr><td>기술</td><td>구조예측 모델 추론·검증 / FEP 계산 파이프라인 운용 / GPU 기반 대규모 추론 인프라 활용</td></tr>
+        <tr><td>태도</td><td>실험 검증 데이터와의 교차검증을 중시하는 태도 / 예측 불확실성을 명시하는 태도</td></tr>
+      </table>
+      <div class="st-lbl">근거 사례</div>
+      <table class="tbl">
+        <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th></tr>
+        <tr><td>C001</td><td>알파폴드2 단백질 구조 예측</td><td>Google DeepMind</td><td>영국</td><td>2021</td></tr>
+        <tr><td>C006</td><td>릴레이 테라퓨틱스 Dynamo 플랫폼</td><td>Relay Therapeutics</td><td>미국</td><td>2022</td></tr>
+        <tr><td>C007</td><td>RFdiffusion de novo 단백질 설계</td><td>Baker Lab, UW</td><td>미국</td><td>2023</td></tr>
+        <tr><td>C008</td><td>이소모픽 랩스 알파폴드3</td><td>Isomorphic Labs / Google DeepMind</td><td>영국</td><td>2024</td></tr>
+        <tr><td>C010</td><td>NVIDIA BioNeMo 신약 개발 플랫폼</td><td>NVIDIA</td><td>미국</td><td>2023</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="db" id="u2-2">
+    <div class="db-hd"><div class="db-n">2</div><div><div class="db-tt">AI 신약후보 생성 및 표적-상호작용 예측</div><div class="db-en">AI-driven De Novo Drug Candidate Generation & Target Interaction Prediction</div></div><div class="db-pos">잠정수준 (안)</div></div>
+    <div class="db-bd">
+      <div class="db-code">분류번호(가칭): AI3-DRG-02_26v0(안) · 정식 NCS 분류번호 아님</div>
+      <div class="db-sum"><b>능력단위 정의(안):</b> 생성형 AI로 신규 분자 후보를 설계(de novo)하고, 표적 단백질과의 결합력·활성을 예측하며, 능동학습으로 후보물질 스크리닝을 반복 최적화하는 능력이다.</div>
+      <div class="st-lbl">능력단위요소(안)</div>
+      <div class="st-row"><div class="st-n">1</div><div class="st-b"><h4>생성모델로 신규 분자후보 설계하기(de novo)</h4><p>생성형 AI·강화학습으로 원하는 약리·물성 조건을 만족하는 신규 분자 구조를 직접 생성할 수 있다.</p><span class="ex">근거: C002(Insilico Medicine INS018_055 — 비용 1/10·기간 1/3, 세계 최초 생성형AI 설계 약물 임상2상)</span></div></div>
+      <div class="st-row"><div class="st-n">2</div><div class="st-b"><h4>표적 단백질과의 결합력·활성 예측하기</h4><p>딥러닝 기반으로 후보물질과 표적 단백질 간 결합력·생물학적 활성을 예측할 수 있다.</p><span class="ex">근거: C083(신테카바이오), C084(파로스아이바이오 — AI 신약 파이프라인 임상 진입)</span></div></div>
+      <div class="st-row"><div class="st-n">3</div><div class="st-b"><h4>능동학습 기반 후보물질 반복 스크리닝·최적화하기</h4><p>능동학습(active learning) 전략으로 우선순위 높은 후보물질을 반복 선별·검증하여 스크리닝 효율을 높일 수 있다.</p><span class="ex">근거: C094(MIT AI 항생제 내성균 치료제 Halicin 발굴 — Cell 2020)</span></div></div>
+      <table class="tbl">
+        <tr><th>구분</th><th>내용(사례 기술 태그 기반)</th></tr>
+        <tr><td>지식</td><td>생성형 AI·확산 모델 원리 / 강화학습 기반 분자 최적화 / 능동학습 샘플링 전략 / 그래프 신경망(분자 표현)</td></tr>
+        <tr><td>기술</td><td>분자 생성모델 학습·튜닝 / 표적-리간드 결합 예측모델 구축 / 대규모 스크리닝 파이프라인 자동화</td></tr>
+        <tr><td>태도</td><td>신약 안전성·독성 리스크를 함께 고려하는 태도 / 임상 파이프라인 관점에서 우선순위를 판단하는 태도</td></tr>
+      </table>
+      <div class="st-lbl">근거 사례</div>
+      <table class="tbl">
+        <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th></tr>
+        <tr><td>C002</td><td>인실리코 메디신 INS018_055 신약</td><td>Insilico Medicine</td><td>홍콩/미국</td><td>2023</td></tr>
+        <tr><td>C082</td><td>KAIST AI 신약 발굴 플랫폼</td><td>KAIST / 삼성서울병원 / 네이버클라우드</td><td>한국</td><td>2025</td></tr>
+        <tr><td>C083</td><td>신테카바이오 딥러닝 AI 신약 후보물질 탐색</td><td>신테카바이오</td><td>한국</td><td>2023</td></tr>
+        <tr><td>C084</td><td>파로스아이바이오 AI 신약 파이프라인 임상 진입</td><td>파로스아이바이오</td><td>한국</td><td>2023</td></tr>
+        <tr><td>C094</td><td>MIT AI 항생제 내성균 치료제 Halicin 발굴</td><td>MIT / Harvard</td><td>미국</td><td>2020</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="db" id="u2-3">
+    <div class="db-hd"><div class="db-n">3</div><div><div class="db-tt">AI 문헌 기반 약물 재창출 및 합성경로 예측</div><div class="db-en">AI Literature-based Drug Repurposing & Retrosynthesis Prediction</div></div><div class="db-pos">잠정수준 (안)</div></div>
+    <div class="db-bd">
+      <div class="db-code">분류번호(가칭): AI3-DRG-03_26v0(안) · 정식 NCS 분류번호 아님</div>
+      <div class="db-sum"><b>능력단위 정의(안):</b> 지식그래프·자연어 처리로 문헌·데이터에서 약물-질병 관계를 탐색해 기존 약물을 재창출하고, 트랜스포머 기반 모델로 신약 후보의 합성경로를 예측하는 능력이다.</div>
+      <div class="st-lbl">능력단위요소(안)</div>
+      <div class="st-row"><div class="st-n">1</div><div class="st-b"><h4>지식그래프·NLP로 약물-질병 관계 탐색하기</h4><p>문헌·데이터를 지식그래프로 구조화하고 그래프 신경망·NLP로 기존 약물의 새로운 적응증(재창출 후보)을 탐색할 수 있다.</p><span class="ex">근거: C003(BenevolentAI 바리시티닙 — COVID-19 FDA 긴급사용승인, 입원기간 18→10일)</span></div></div>
+      <div class="st-row"><div class="st-n">2</div><div class="st-b"><h4>트랜스포머 기반 역합성 경로 예측하기</h4><p>목표 분자로부터 역방향으로 합성 가능한 반응 경로를 트랜스포머 모델로 예측할 수 있다.</p><span class="ex">근거: C009(IBM RXN for Chemistry — 순방향 예측 90%+, 레트로합성 정확도 9배 향상)</span></div></div>
+      <div class="st-row"><div class="st-n">3</div><div class="st-b"><h4>예측 결과의 임상적·화학적 타당성 검토하기</h4><p>AI가 제시한 재창출 후보·합성경로를 임상·화학 전문 지식으로 교차 검토할 수 있다.</p><span class="ex">근거: C003, C009 공통 — 실제 승인·검증 단계로 이어진 사례</span></div></div>
+      <table class="tbl">
+        <tr><th>구분</th><th>내용(사례 기술 태그 기반)</th></tr>
+        <tr><td>지식</td><td>지식그래프·그래프 신경망 / 자연어 처리 기반 문헌마이닝 / 유기화학 반응 지식</td></tr>
+        <tr><td>기술</td><td>지식그래프 구축·질의(query) / 역합성(retrosynthesis) 예측모델 활용</td></tr>
+        <tr><td>태도</td><td>근거 기반(evidence-based) 의사결정 태도 / 임상·화학 전문가와의 다학제 협업 태도</td></tr>
+      </table>
+      <div class="st-lbl">근거 사례</div>
+      <table class="tbl">
+        <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th></tr>
+        <tr><td>C003</td><td>베네볼런트AI 바리시티닙 약물 재창출</td><td>BenevolentAI</td><td>영국</td><td>2020</td></tr>
+        <tr><td>C009</td><td>IBM RXN 화학 AI 합성 경로 예측</td><td>IBM Research Europe</td><td>스위스</td><td>2022</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="limits">
+  <div class="h1">Ⅴ. 한계 및 향후 검증 과제</div>
+  <div class="co co-w"><b>표본 규모</b> — 능력단위당 근거 사례가 2~5건에 불과해 공식 NCS(다수 산업체 설문·전문가 워크숍 기반)보다 표본이 매우 얇습니다. 특히 신약개발 도메인은 사례들이 실제로는 여러 능력단위 기술을 동시에 사용하는 경우가 많아, 하나의 대표 능력단위에만 배치한 것은 단순화입니다.</div>
+  <div class="co co-w"><b>수준(1~8) 미표기</b> — NCS는 종사자 학력·경력연차 통계로 직능수준을 추정합니다. report2 데이터에는 이런 인력 통계가 없어 수준을 임의로 붙이지 않았습니다. 필요 시 관련 직업(예: 로봇공학 기술자, 신약개발 연구원) 종사자 조사를 별도로 수행해야 합니다.</div>
+  <div class="co co-w"><b>평가지침·자격 연계 미제공</b> — 공식 NCS의 "평가지침", "관련 국가기술자격", "직업기초능력 매핑"에 해당하는 항목은 전문가 검증 없이 임의로 작성할 경우 오도 소지가 있어 이번 버전에서는 제외했습니다.</div>
+  <div class="co"><b>다음 단계 제안</b> — (1) 나머지 8개 도메인으로 확장, (2) 각 능력단위를 실제 로봇/제약 산업 현장 전문가 2~3인 인터뷰로 검증(특히 능력단위요소·수준), (3) 검증 완료 능력단위부터 교육과정(커리큘럼) 초안에 반영.</div>
+</div>
+
+<div class="sec" id="appendix">
+  <div class="h1">Ⅵ. 부록 — 근거 사례 전체 목록 (22건)</div>
+  <div class="h2">로봇·자율화 (8건)</div>
+  <table class="tbl">
+    <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th><th>공통기술</th><th>분야기술</th></tr>
+    <tr><td>C072</td><td>보스턴 다이나믹스 도요타 아틀라스 LBM</td><td>Boston Dynamics / TRI</td><td>미국</td><td>2025</td><td>파운데이션 모델, 강화학습, 생성형 AI</td><td>산업용 휴머노이드 제어</td></tr>
+    <tr><td>C073</td><td>CMU Coscientist LLM 자율 화학 연구 로봇</td><td>CMU / Emerald Cloud Lab</td><td>미국</td><td>2023</td><td>LLM, AI 에이전트, NLP</td><td>자율 실험 로봇 제어, 화학 합성 자율 계획</td></tr>
+    <tr><td>C074</td><td>이동형 자율 로봇 화학 탐색</td><td>복수 연구기관</td><td>국제</td><td>2024</td><td>머신러닝, AI 에이전트</td><td>자율 실험 로봇 제어, 화학 합성 자율 계획</td></tr>
+    <tr><td>C077</td><td>KAIST 카이로스 이기종 로봇 무인공장</td><td>KAIST</td><td>한국</td><td>2024</td><td>AI 에이전트, 강화학습, 멀티모달 AI</td><td>산업용 휴머노이드 제어, 자율 실험 로봇 제어</td></tr>
+    <tr><td>C078</td><td>KAIST AI 사출공정 생성형 AI 자율 최적화</td><td>KAIST</td><td>한국</td><td>2024</td><td>생성형 AI, LLM</td><td>산업용 휴머노이드 제어, 자율 실험 로봇 제어</td></tr>
+    <tr><td>C080</td><td>ETRI AI 강화학습 자율주행 판단</td><td>ETRI</td><td>한국</td><td>2023</td><td>강화학습, 멀티모달 AI, 컴퓨터 비전</td><td>산업용 휴머노이드 제어</td></tr>
+    <tr><td>C081</td><td>현대자동차그룹 전동식 아틀라스 AI 휴머노이드</td><td>현대차그룹 / Boston Dynamics</td><td>한국</td><td>2024</td><td>컴퓨터 비전, 강화학습</td><td>산업용 휴머노이드 제어, 자율 탐사 로봇 제어</td></tr>
+    <tr><td>C100</td><td>Google DeepMind RT-2</td><td>Google DeepMind</td><td>미국/영국</td><td>2023</td><td>파운데이션 모델, 멀티모달 AI, 트랜스포머</td><td>산업용 휴머노이드 제어</td></tr>
+  </table>
+  <div class="h2">신약개발 (14건)</div>
+  <table class="tbl">
+    <tr><th>ID</th><th>사례명</th><th>기관</th><th>국가</th><th>연도</th><th>공통기술</th><th>분야기술</th></tr>
+    <tr><td>C001</td><td>알파폴드2 단백질 구조 예측</td><td>Google DeepMind</td><td>영국</td><td>2021</td><td>딥러닝, 트랜스포머</td><td>단백질 구조 예측, 오믹스 분석</td></tr>
+    <tr><td>C002</td><td>인실리코 메디신 INS018_055</td><td>Insilico Medicine</td><td>홍콩/미국</td><td>2023</td><td>생성형 AI, 강화학습, 딥러닝</td><td>de novo 약물 설계, 오믹스 분석, 약물-표적 상호작용 예측</td></tr>
+    <tr><td>C003</td><td>베네볼런트AI 바리시티닙</td><td>BenevolentAI</td><td>영국</td><td>2020</td><td>지식그래프, NLP, 그래프 신경망</td><td>약물 재창출, 약물-표적 상호작용 예측</td></tr>
+    <tr><td>C004</td><td>리커전 파마슈티컬스 AI 페노믹스</td><td>Recursion Pharmaceuticals</td><td>미국</td><td>2023</td><td>딥러닝, 컴퓨터 비전</td><td>약물-표적 상호작용 예측</td></tr>
+    <tr><td>C005</td><td>슈뢰딩거 FEP+ ML 약물 설계</td><td>Schrödinger</td><td>미국</td><td>2022</td><td>머신러닝, 능동학습, 딥러닝</td><td>자유에너지 계산(FEP), 분자동역학 시뮬레이션, 약물-표적 상호작용 예측</td></tr>
+    <tr><td>C006</td><td>릴레이 테라퓨틱스 Dynamo</td><td>Relay Therapeutics</td><td>미국</td><td>2022</td><td>딥러닝, 능동학습, 강화학습</td><td>단백질 구조 예측, 분자동역학 시뮬레이션, 자유에너지 계산(FEP)</td></tr>
+    <tr><td>C007</td><td>RFdiffusion de novo 단백질 설계</td><td>Baker Lab, UW</td><td>미국</td><td>2023</td><td>확산 모델, 생성형 AI, 딥러닝</td><td>단백질 구조 예측, de novo 약물 설계</td></tr>
+    <tr><td>C008</td><td>이소모픽 랩스 알파폴드3</td><td>Isomorphic Labs / DeepMind</td><td>영국</td><td>2024</td><td>확산 모델, 트랜스포머, 생성형 AI</td><td>단백질 구조 예측, 자유에너지 계산(FEP), 약물-표적 상호작용 예측</td></tr>
+    <tr><td>C009</td><td>IBM RXN 화학 AI 합성 경로 예측</td><td>IBM Research Europe</td><td>스위스</td><td>2022</td><td>트랜스포머, NLP, 딥러닝</td><td>레트로합성 분석</td></tr>
+    <tr><td>C010</td><td>NVIDIA BioNeMo</td><td>NVIDIA</td><td>미국</td><td>2023</td><td>생성형 AI, 파운데이션 모델, 트랜스포머</td><td>단백질 구조 예측, de novo 약물 설계</td></tr>
+    <tr><td>C082</td><td>KAIST AI 신약 발굴 플랫폼</td><td>KAIST / 삼성서울병원 / 네이버클라우드</td><td>한국</td><td>2025</td><td>그래프 신경망, 딥러닝, LLM</td><td>약물-표적 상호작용 예측, de novo 약물 설계</td></tr>
+    <tr><td>C083</td><td>신테카바이오 AI 신약 후보물질 탐색</td><td>신테카바이오</td><td>한국</td><td>2023</td><td>딥러닝, 그래프 신경망</td><td>약물-표적 상호작용 예측, de novo 약물 설계</td></tr>
+    <tr><td>C084</td><td>파로스아이바이오 AI 신약 파이프라인</td><td>파로스아이바이오</td><td>한국</td><td>2023</td><td>딥러닝, 생성형 AI</td><td>de novo 약물 설계, 약물-표적 상호작용 예측</td></tr>
+    <tr><td>C094</td><td>MIT AI 항생제 내성균 치료제 Halicin</td><td>MIT / Harvard</td><td>미국</td><td>2020</td><td>딥러닝, 머신러닝, 능동학습</td><td>de novo 약물 설계, 약물-표적 상호작용 예측</td></tr>
+  </table>
+</div>
+
+</div>
+</div>
+<div class="footer">AI 활용역량 체계(안) — NCS 형식을 차용한 Phase 3 시범 문서 · report2(<code>case_tech_map.json</code>) 기반 · 공식 NCS 아님, 전문가 검증 미실시 · v0.1 (2026-08-23)</div>
+</body>
+</html>
