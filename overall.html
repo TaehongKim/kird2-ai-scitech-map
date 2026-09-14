@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 5 Overall — AI 혁신 사례·NCS·기술군 통합 보고서</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --surface: #131a26;
+    --surface2: #1a2332;
+    --surface3: #222d3f;
+    --border: #2b3a50;
+    --text: #edf3fb;
+    --muted: #9aabc1;
+    --faint: #66788f;
+    --blue: #5aa7ff;
+    --cyan: #53d7e8;
+    --purple: #a78bfa;
+    --green: #45cf82;
+    --orange: #f4ac55;
+    --red: #ff7185;
+    --shadow: 0 18px 44px rgba(0,0,0,.23);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; line-height: 1.55; }
+  a { color: var(--cyan); }
+  button, input, select { font: inherit; }
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(11,15,23,.93); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { max-width: 1440px; margin: auto; padding: 11px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { color: var(--text); text-decoration: none; font-weight: 750; letter-spacing: -.02em; }
+  .nav { display: flex; flex-wrap: wrap; gap: 6px; }
+  .nav a { color: var(--muted); text-decoration: none; font-size: 12px; padding: 6px 10px; border: 1px solid transparent; border-radius: 7px; }
+  .nav a:hover, .nav a.active { color: var(--text); background: var(--surface2); border-color: var(--border); }
+  .hero { overflow: hidden; border-bottom: 1px solid var(--border); background:
+    radial-gradient(circle at 82% 18%, rgba(83,215,232,.14), transparent 28%),
+    radial-gradient(circle at 20% 0%, rgba(167,139,250,.16), transparent 34%),
+    linear-gradient(145deg, #111928, #0b0f17 62%); }
+  .hero-inner { max-width: 1440px; margin: auto; padding: 72px 28px 58px; display: grid; grid-template-columns: minmax(0,1.45fr) minmax(320px,.75fr); gap: 54px; align-items: end; }
+  .eyebrow { color: var(--cyan); font-size: 12px; font-weight: 750; letter-spacing: .15em; text-transform: uppercase; }
+  h1 { max-width: 860px; margin: 12px 0 18px; font-size: clamp(34px,5vw,70px); line-height: 1.08; letter-spacing: -.055em; font-weight: 780; }
+  .hero p { max-width: 800px; margin: 0; color: var(--muted); font-size: clamp(15px,1.6vw,19px); }
+  .hero-note { background: rgba(19,26,38,.74); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
+  .hero-note strong { display: block; margin-bottom: 8px; color: var(--green); }
+  .hero-note p { font-size: 13px; }
+  .page { max-width: 1440px; margin: auto; padding: 28px 28px 80px; }
+  .status { min-height: 22px; color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+  .status.error { color: var(--red); }
+  .kpis { display: grid; grid-template-columns: repeat(8, minmax(125px,1fr)); gap: 10px; margin-bottom: 54px; }
+  .kpi { min-height: 112px; padding: 16px; background: linear-gradient(160deg,var(--surface2),var(--surface)); border: 1px solid var(--border); border-radius: 12px; }
+  .kpi-value { font-size: clamp(25px,2.6vw,38px); font-weight: 760; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .kpi-label { margin-top: 5px; color: var(--muted); font-size: 12px; }
+  .kpi-context { margin-top: 4px; color: var(--faint); font-size: 11px; }
+  section { margin: 0 0 68px; scroll-margin-top: 72px; }
+  .section-head { display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,.7fr); gap: 30px; align-items: end; margin-bottom: 22px; }
+  .section-no { color: var(--cyan); font-weight: 700; font-size: 11px; letter-spacing: .14em; }
+  h2 { margin: 7px 0 0; font-size: clamp(24px,3vw,38px); line-height: 1.18; letter-spacing: -.035em; }
+  .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
+  .method { display: grid; grid-template-columns: 1.25fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .method-main { padding: 24px; border-radius: 14px; background: linear-gradient(135deg,rgba(90,167,255,.13),rgba(167,139,250,.08)); border: 1px solid rgba(90,167,255,.35); }
+  .method-main .rule { font-size: clamp(18px,2.2vw,28px); font-weight: 720; line-height: 1.35; margin: 10px 0; }
+  .method-main p, .method-side p { margin: 0; color: var(--muted); font-size: 13px; }
+  .method-side { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mini { padding: 17px; border: 1px solid var(--border); background: var(--surface); border-radius: 12px; }
+  .mini strong { font-size: 24px; color: var(--green); }
+  .mini span { display: block; color: var(--muted); font-size: 12px; margin-top: 5px; }
+  .journey { display: grid; grid-template-columns: repeat(5,minmax(170px,1fr)); gap: 12px; position: relative; }
+  .journey::before { content: ""; position: absolute; left: 8%; right: 8%; top: 35px; border-top: 1px solid var(--border); z-index: 0; }
+  .phase { position: relative; z-index: 1; padding: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; min-height: 205px; }
+  .phase-dot { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: var(--surface3); border: 2px solid var(--blue); color: var(--text); font-weight: 750; }
+  .phase:last-child .phase-dot { border-color: var(--green); box-shadow: 0 0 0 6px rgba(69,207,130,.08); }
+  .phase h3 { margin: 18px 0 8px; font-size: 16px; }
+  .phase p { margin: 0; color: var(--muted); font-size: 12px; }
+  .phase-metric { margin-top: 14px; color: var(--cyan); font-weight: 650; font-size: 12px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-bottom: 14px; }
+  .controls label { color: var(--muted); font-size: 12px; }
+  select, input[type="search"] { min-height: 38px; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
+  input[type="search"] { min-width: 230px; }
+  .portfolio-wrap { overflow-x: auto; }
+  #portfolioChart { display: block; width: 100%; min-width: 880px; }
+  .axis text, .chart-label { fill: var(--muted); font-size: 11px; }
+  .axis path, .axis line { stroke: var(--border); }
+  .grid line { stroke: var(--border); stroke-opacity: .6; }
+  .selected-detail { margin-top: 12px; min-height: 68px; padding: 14px 16px; background: var(--surface2); border-left: 3px solid var(--cyan); border-radius: 0 9px 9px 0; }
+  .selected-detail strong { display: block; margin-bottom: 4px; }
+  .selected-detail span { color: var(--muted); font-size: 12px; }
+  .matrix-panel { padding: 0; overflow: hidden; }
+  .matrix-tools { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .matrix-count { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .matrix-wrap { max-height: 690px; overflow: auto; }
+  table.matrix { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; }
+  .matrix th, .matrix td { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; padding: 0; }
+  .matrix thead th { position: sticky; top: 0; z-index: 3; height: 178px; min-width: 31px; background: var(--surface2); vertical-align: bottom; }
+  .matrix thead th:first-child { left: 0; z-index: 5; min-width: 232px; height: auto; padding: 12px; text-align: left; vertical-align: middle; }
+  .major-head { height: 176px; display: flex; align-items: center; justify-content: flex-end; gap: 5px; padding: 7px 5px; writing-mode: vertical-rl; text-orientation: mixed; }
+  .major-code { color: var(--cyan); font-weight: 750; }
+  .major-name { color: var(--text); font-weight: 600; }
+  .matrix tbody th { position: sticky; left: 0; z-index: 2; width: 232px; max-width: 232px; padding: 7px 10px; text-align: left; background: var(--surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 550; }
+  .matrix tbody tr:hover th, .matrix tbody tr:hover td { background-color: rgba(90,167,255,.06); }
+  .matrix td { width: 31px; height: 27px; background: var(--surface); }
+  .matrix-cell { width: 100%; height: 100%; border: 0; border-radius: 0; background: transparent; cursor: pointer; position: relative; }
+  .matrix-cell.present::after { content: ""; position: absolute; inset: 6px 8px; border-radius: 3px; background: var(--blue); }
+  .matrix-cell.imp-중::after { opacity: .62; }
+  .matrix-cell.imp-하::after { opacity: .3; }
+  .matrix-cell.inferred::after { outline: 1px dashed var(--text); outline-offset: 1px; }
+  .matrix-cell:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+  .matrix-detail { min-height: 46px; padding: 12px 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; color: var(--muted); font-size: 11px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: -1px; background: var(--blue); }
+  .swatch.mid { opacity: .62; } .swatch.low { opacity: .3; } .swatch.dashed { outline: 1px dashed var(--text); outline-offset: 1px; }
+  .compare-grid { display: grid; grid-template-columns: .75fr 1fr 1.45fr; gap: 12px; }
+  .compare-card { min-height: 300px; padding: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 13px; }
+  .compare-card h3 { margin: 0 0 4px; font-size: 14px; }
+  .compare-card p { margin: 0 0 8px; color: var(--muted); font-size: 11px; }
+  .compare-card svg { width: 100%; display: block; }
+  .lineage { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 12px; align-items: stretch; }
+  .lineage-col { display: flex; flex-direction: column; gap: 10px; }
+  .lineage-card { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 15px; }
+  .lineage-card.primary { background: linear-gradient(145deg,rgba(90,167,255,.12),var(--surface)); border-color: rgba(90,167,255,.44); }
+  .lineage-card h3 { margin: 0 0 6px; font-size: 14px; }
+  .lineage-card p, .lineage-card li { color: var(--muted); font-size: 12px; }
+  .lineage-card ul { padding-left: 18px; margin: 8px 0 0; }
+  .file-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .file-links a { color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 7px 9px; font-size: 11px; text-decoration: none; }
+  .file-links a:hover { border-color: var(--cyan); }
+  footer { border-top: 1px solid var(--border); color: var(--faint); padding: 24px 28px 38px; font-size: 11px; }
+  footer .in { max-width: 1440px; margin: auto; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  @media (max-width: 1120px) {
+    .kpis { grid-template-columns: repeat(4,1fr); }
+    .journey { grid-template-columns: repeat(3,1fr); }
+    .journey::before { display: none; }
+    .compare-grid { grid-template-columns: 1fr 1fr; }
+    .compare-card:last-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 760px) {
+    .topbar-inner, .hero-inner, .page { padding-left: 16px; padding-right: 16px; }
+    .topbar-inner { align-items: flex-start; flex-direction: column; }
+    .hero-inner { grid-template-columns: 1fr; padding-top: 48px; gap: 28px; }
+    .section-head, .method, .lineage { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: repeat(2,1fr); }
+    .journey { grid-template-columns: 1fr; }
+    .method-side, .compare-grid { grid-template-columns: 1fr; }
+    .compare-card:last-child { grid-column: auto; }
+    .matrix-count { width: 100%; margin-left: 0; }
+  }
+  @media (max-width: 380px) {
+    .kpis { grid-template-columns: 1fr; }
+    input[type="search"] { min-width: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top">KIRD AI × NCS Overall</a>
+    <nav class="nav" aria-label="산출물 이동">
+      <a class="active" href="overall.html">Overall</a>
+      <a href="index.html">사례 지식맵</a>
+      <a href="ai_tech_map_v5.html">Phase 5 기술맵</a>
+      <a href="report5_ai_tech.html">Phase 5 보고서</a>
+      <a href="report4_ncs_ai.html">Phase 4 보고서</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Phase 5 · Overall Report &amp; Visualization</div>
+      <h1>AI 혁신 사례에서<br>NCS 직무 기술체계까지</h1>
+      <p>국내외 사례 수집, 근거 분석, 기술군 도출, NCS 24개 분야 확장, 공통·특화 기술 재분류까지 지금까지의 전체 작업을 하나의 데이터 흐름으로 통합했습니다.</p>
+    </div>
+    <aside class="hero-note">
+      <strong>데이터 기반 배타적 분류</strong>
+      <p>동일 기술이 서로 다른 NCS 중분류 2곳 이상에서 확인되면 공통기술로 상향합니다. 정확히 1곳에만 결합되면 특화기술로 유지합니다. 따라서 공통·특화 기술의 오버랩은 구조적으로 0입니다.</p>
+    </aside>
+  </div>
+</header>
+
+<main class="page">
+  <div id="status" class="status" aria-live="polite">전체 데이터를 불러오는 중입니다…</div>
+  <div id="kpis" class="kpis" aria-label="전체 핵심 통계"></div>
+
+  <section id="journey">
+    <div class="section-head">
+      <div><div class="section-no">01 / JOURNEY</div><h2>전체 작업 여정</h2></div>
+      <p>사례 100건으로 시작한 과학기술 지식맵이 NCS 전 분야 261건으로 확장되고, 실제 인용 데이터를 기준으로 기술 분류가 정교해지는 과정입니다.</p>
+    </div>
+    <div class="method">
+      <div class="method-main">
+        <div class="eyebrow">Phase 5 classification rule</div>
+        <div class="rule">2개 이상 중분류 → 공통기술<br>1개 중분류 → 특화기술</div>
+        <p>사람이 기술 소속을 먼저 정하지 않고 사례가 실제로 어느 직무 분야에서 인용되었는지 매 빌드마다 다시 계산합니다.</p>
+      </div>
+      <div class="method-side" id="methodMetrics"></div>
+    </div>
+    <div id="journeyCards" class="journey"></div>
+  </section>
+
+  <section id="portfolio">
+    <div class="section-head">
+      <div><div class="section-no">02 / NCS PORTFOLIO</div><h2>NCS 24개 분야 포트폴리오</h2></div>
+      <p>각 NCS 대분류의 사례 규모와 고유 공통·특화 기술 수를 나란히 비교합니다. 분야를 선택하면 국내외 구성과 근거수준까지 확인할 수 있습니다.</p>
+    </div>
+    <div class="panel">
+      <div class="controls">
+        <label for="majorSort">정렬</label>
+        <select id="majorSort"><option value="code">NCS 코드순</option><option value="cases">사례 많은 순</option><option value="tech">기술 많은 순</option></select>
+        <label for="majorSelect">분야 상세</label>
+        <select id="majorSelect"></select>
+      </div>
+      <div class="portfolio-wrap">
+        <svg id="portfolioChart" role="img" aria-labelledby="portfolioTitle portfolioDesc"><title id="portfolioTitle">NCS 대분류별 사례와 기술 포트폴리오</title><desc id="portfolioDesc">24개 NCS 대분류별 사례 수와 공통·특화 기술 수를 두 축으로 비교하는 가로 막대 차트입니다.</desc></svg>
+      </div>
+      <div id="majorDetail" class="selected-detail" aria-live="polite"></div>
+      <div class="legend"><span><i class="swatch"></i>사례</span><span><i class="swatch" style="background:var(--cyan)"></i>공통기술</span><span><i class="swatch" style="background:var(--orange)"></i>특화기술</span></div>
+    </div>
+  </section>
+
+  <section id="matrix">
+    <div class="section-head">
+      <div><div class="section-no">03 / CROSS-FIELD MATRIX</div><h2>공통기술 매트릭스</h2></div>
+      <p>공통기술 53종이 NCS 24개 분야 중 어디에서 실제 사례 근거로 확인됐는지 보여줍니다. 코드만이 아니라 모든 NCS 분야명을 열에 함께 표시합니다.</p>
+    </div>
+    <div class="panel matrix-panel">
+      <div class="matrix-tools">
+        <label for="matrixSearch" class="sr-only">공통기술 검색</label>
+        <input id="matrixSearch" type="search" placeholder="공통기술명·범주 검색">
+        <label for="matrixSort">정렬</label>
+        <select id="matrixSort"><option value="reach">활용 분야 많은 순</option><option value="cases">근거 사례 많은 순</option><option value="name">기술명순</option></select>
+        <span id="matrixCount" class="matrix-count"></span>
+      </div>
+      <div id="matrixWrap" class="matrix-wrap"></div>
+      <div id="matrixDetail" class="matrix-detail" aria-live="polite">셀을 선택하면 기술·NCS 분야·근거 사례 수를 표시합니다.</div>
+    </div>
+    <div class="legend"><span><i class="swatch"></i>중요도 상</span><span><i class="swatch mid"></i>중</span><span><i class="swatch low"></i>하</span><span><i class="swatch dashed"></i>추정 근거</span></div>
+  </section>
+
+  <section id="comparison">
+    <div class="section-head">
+      <div><div class="section-no">04 / EVIDENCE</div><h2>국내·해외 및 근거수준</h2></div>
+      <p>전체 261개 사례의 지역 구성, 사례와 기술 배치의 명시·추정 근거 비율, 발표연도 분포를 같은 데이터 버전에서 계산했습니다.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card"><h3>국내 vs 해외</h3><p>사례 수와 전체 대비 비율</p><svg id="regionChart" role="img" aria-label="국내와 해외 사례 비율"><desc>전체 사례 중 국내와 해외 사례 비율을 나타낸 도넛 차트입니다.</desc></svg></div>
+      <div class="compare-card"><h3>근거수준</h3><p>사례 판정과 기술 배치 기준 비교</p><svg id="evidenceChart" role="img" aria-label="명시와 추정 근거 분포"><desc>사례와 기술 배치의 명시 및 추정 근거 수를 비교합니다.</desc></svg></div>
+      <div class="compare-card"><h3>사례 발표연도</h3><p>수집 사례의 연도별 분포</p><svg id="yearChart" role="img" aria-label="연도별 사례 수"><desc>2018년부터 2026년까지 발표연도별 사례 수 추이를 보여줍니다.</desc></svg></div>
+    </div>
+  </section>
+
+  <section id="lineage">
+    <div class="section-head">
+      <div><div class="section-no">05 / DATA LINEAGE</div><h2>데이터 계보와 산출물</h2></div>
+      <p>공식 NCS 골격과 프로젝트가 도출한 AI 확장안을 구분하고, 각 보고서와 시각화가 어떤 데이터 버전을 사용하는지 추적할 수 있습니다.</p>
+    </div>
+    <div id="lineageGrid" class="lineage"></div>
+  </section>
+</main>
+
+<footer><div class="in">NCS 기준: 국가직무능력표준 정보망 데이터베이스 2026년 2월. AI 기술 노드와 배치는 수집 사례를 근거로 도출한 프로젝트 확장(안)이며 공식 NCS가 아닙니다. 생성일 <span id="generatedDate">-</span>.</div></footer>
+
+<script>
+let DATA = null;
+const state = { majorSort: 'code', selectedMajor: '01', matrixQuery: '', matrixSort: 'reach' };
+const fmt = d3.format(',');
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+fetch('data/overall_stats_v5.json').then(response => {
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  return response.json();
+}).then(data => {
+  DATA = data;
+  renderKpis();
+  renderJourney();
+  initControls();
+  renderPortfolio();
+  renderMatrix();
+  renderComparisons();
+  renderLineage();
+  document.getElementById('generatedDate').textContent = DATA.metadata.generated_date;
+  document.getElementById('status').textContent = '최신 통합 데이터 기준 · ' + DATA.metadata.generated_date + ' · 모든 수치는 원천 JSON에서 자동 계산';
+}).catch(error => {
+  const status = document.getElementById('status');
+  status.className = 'status error';
+  status.textContent = '데이터를 불러오지 못했습니다: ' + error.message + '. 로컬 웹 서버로 열어 주세요.';
+});
+
+function renderKpis() {
+  const s = DATA.summary;
+  const items = [
+    ['사례', s.cases, `해외 ${fmt(s.overseas_cases)} · 국내 ${fmt(s.domestic_cases)}`],
+    ['AI 기술', s.technologies, `공통 ${s.common_technologies} · 특화 ${s.specialized_technologies}`],
+    ['NCS 대분류', s.ncs_majors, `중분류 ${s.ncs_middles}개`],
+    ['NCS 소분류', s.ncs_minors, `세분류 ${fmt(s.ncs_jobs)}개`],
+    ['NCS 능력단위', s.ncs_units, '2026년 2월 기준'],
+    ['기술 배치', s.placements, `가상 노드 ${s.virtual_nodes}개`],
+    ['재분류', s.reclassified, '특화 → 공통 승격'],
+    ['분류 오버랩', s.common_specialized_overlap, '배타적 분할 검증'],
+  ];
+  d3.select('#kpis').selectAll('article').data(items).join('article').attr('class','kpi')
+    .html(d => `<div class="kpi-value">${fmt(d[1])}</div><div class="kpi-label">${esc(d[0])}</div><div class="kpi-context">${esc(d[2])}</div>`);
+}
+
+function renderJourney() {
+  const c = DATA.phase_comparison;
+  const metrics = [
+    [fmt(c.added_cases), 'Phase 4에서 추가된 사례'],
+    ['+' + fmt(c.expanded_technologies - c.baseline_technologies), '확장된 기술 종류'],
+    [fmt(c.phase5_common - c.phase4_common), '공통기술 순증'],
+    [fmt(DATA.summary.common_specialized_overlap), '공통·특화 오버랩'],
+  ];
+  d3.select('#methodMetrics').selectAll('div').data(metrics).join('div').attr('class','mini')
+    .html(d => `<strong>${esc(d[0])}</strong><span>${esc(d[1])}</span>`);
+  d3.select('#journeyCards').selectAll('article').data(DATA.phases).join('article').attr('class','phase')
+    .html(d => `<div class="phase-dot">${d.phase}</div><h3>${esc(d.title)}</h3><p>${esc(d.summary)}</p><div class="phase-metric">${esc(d.metric)}</div>`);
+}
+
+function initControls() {
+  const select = d3.select('#majorSelect');
+  select.selectAll('option').data(DATA.ncs_majors).join('option').attr('value',d=>d.code).text(d=>`${d.code} ${d.name}`);
+  select.property('value', state.selectedMajor).on('change', event => { state.selectedMajor = event.target.value; renderPortfolio(); });
+  d3.select('#majorSort').on('change', event => { state.majorSort = event.target.value; renderPortfolio(); });
+  d3.select('#matrixSearch').on('input', event => { state.matrixQuery = event.target.value.trim().toLowerCase(); renderMatrix(); });
+  d3.select('#matrixSort').on('change', event => { state.matrixSort = event.target.value; renderMatrix(); });
+}
+
+function renderPortfolio() {
+  const rows = DATA.ncs_majors.map(d => ({...d}));
+  if (state.majorSort === 'cases') rows.sort((a,b) => b.cases-a.cases || a.code.localeCompare(b.code));
+  else if (state.majorSort === 'tech') rows.sort((a,b) => (b.common_technologies+b.specialized_technologies)-(a.common_technologies+a.specialized_technologies) || a.code.localeCompare(b.code));
+  else rows.sort((a,b) => a.code.localeCompare(b.code));
+
+  const width = Math.max(920, document.querySelector('.portfolio-wrap').clientWidth || 920);
+  const rowH = 25, margin = {top:42,right:22,bottom:24,left:190};
+  const gap = 42, plotW = width - margin.left - margin.right;
+  const caseW = Math.floor(plotW * .43), techX = caseW + gap, techW = plotW - techX;
+  const height = margin.top + rows.length * rowH + margin.bottom;
+  const svg = d3.select('#portfolioChart').attr('viewBox',`0 0 ${width} ${height}`).attr('height',height);
+  svg.selectAll('g.chart-root').remove();
+  const g = svg.append('g').attr('class','chart-root').attr('transform',`translate(${margin.left},${margin.top})`);
+  const y = d3.scaleBand().domain(rows.map(d=>d.code)).range([0,rows.length*rowH]).padding(.24);
+  const xCases = d3.scaleLinear().domain([0,d3.max(rows,d=>d.cases) || 1]).nice().range([0,caseW]);
+  const xTech = d3.scaleLinear().domain([0,d3.max(rows,d=>d.common_technologies+d.specialized_technologies) || 1]).nice().range([0,techW]);
+
+  g.append('g').attr('class','grid').call(d3.axisTop(xCases).ticks(5).tickSize(-rows.length*rowH).tickFormat('')).call(x=>x.select('.domain').remove());
+  g.append('g').attr('class','axis').call(d3.axisTop(xCases).ticks(5));
+  g.append('g').attr('class','axis').attr('transform',`translate(${techX},0)`).call(d3.axisTop(xTech).ticks(5));
+  g.append('text').attr('class','chart-label').attr('x',0).attr('y',-29).text('사례 (건)');
+  g.append('text').attr('class','chart-label').attr('x',techX).attr('y',-29).text('고유 기술 (종)');
+
+  const row = g.selectAll('g.portfolio-row').data(rows,d=>d.code).join('g').attr('class','portfolio-row').attr('transform',d=>`translate(0,${y(d.code)})`).style('cursor','pointer').on('click',(_,d)=>{ state.selectedMajor=d.code; d3.select('#majorSelect').property('value',d.code); renderPortfolio(); });
+  row.append('text').attr('class','chart-label').attr('x',-10).attr('y',y.bandwidth()/2+4).attr('text-anchor','end').style('fill',d=>d.code===state.selectedMajor?'var(--text)':'var(--muted)').style('font-weight',d=>d.code===state.selectedMajor?700:400).text(d=>`${d.code} ${d.name}`);
+  row.append('rect').attr('x',0).attr('y',0).attr('width',d=>xCases(d.cases)).attr('height',y.bandwidth()).attr('rx',3).attr('fill','var(--blue)').attr('opacity',d=>d.code===state.selectedMajor?1:.68);
+  row.append('text').attr('x',d=>xCases(d.cases)+6).attr('y',y.bandwidth()/2+4).attr('class','chart-label').text(d=>d.cases);
+  row.append('rect').attr('x',techX).attr('y',0).attr('width',d=>xTech(d.common_technologies)).attr('height',y.bandwidth()).attr('fill','var(--cyan)').attr('opacity',d=>d.code===state.selectedMajor?1:.72);
+  row.append('rect').attr('x',d=>techX+xTech(d.common_technologies)).attr('y',0).attr('width',d=>xTech(d.specialized_technologies)).attr('height',y.bandwidth()).attr('fill','var(--orange)').attr('opacity',d=>d.code===state.selectedMajor?1:.78);
+  row.append('text').attr('x',d=>techX+xTech(d.common_technologies+d.specialized_technologies)+6).attr('y',y.bandwidth()/2+4).attr('class','chart-label').text(d=>d.common_technologies+d.specialized_technologies);
+
+  const d = DATA.ncs_majors.find(x=>x.code===state.selectedMajor) || DATA.ncs_majors[0];
+  document.getElementById('majorDetail').innerHTML = `<strong>${esc(d.code)} ${esc(d.name)}</strong><span>사례 ${fmt(d.cases)}건 (해외 ${fmt(d.overseas_cases)} · 국내 ${fmt(d.domestic_cases)}) · 공통기술 ${fmt(d.common_technologies)}종 · 특화기술 ${fmt(d.specialized_technologies)}종 · 배치 ${fmt(d.placements)}건 · 명시 ${fmt(d.explicit_placements)} / 추정 ${fmt(d.inferred_placements)}</span>`;
+}
+
+function renderMatrix() {
+  let rows = DATA.common_matrix.technologies.filter(t => !state.matrixQuery || `${t.name} ${t.category || ''}`.toLowerCase().includes(state.matrixQuery));
+  rows = rows.slice();
+  if (state.matrixSort === 'cases') rows.sort((a,b)=>b.case_count-a.case_count || b.reach-a.reach);
+  else if (state.matrixSort === 'name') rows.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+  else rows.sort((a,b)=>b.reach-a.reach || b.case_count-a.case_count || a.name.localeCompare(b.name,'ko'));
+  document.getElementById('matrixCount').textContent = `공통기술 ${rows.length} / ${DATA.common_matrix.technologies.length}종 · NCS ${DATA.common_matrix.majors.length}개 분야`;
+
+  const table = d3.select('#matrixWrap').html('').append('table').attr('class','matrix');
+  const head = table.append('thead').append('tr');
+  head.append('th').text('공통기술 · 활용 분야 수');
+  head.selectAll('th.major').data(DATA.common_matrix.majors).join('th').attr('class','major').attr('title',d=>`${d.code} ${d.name}`)
+    .html(m=>`<div class="major-head"><span class="major-code">${esc(m.code)}</span><span class="major-name">${esc(m.name)}</span></div>`);
+  const bodyRows = table.append('tbody').selectAll('tr').data(rows).join('tr');
+  bodyRows.append('th').attr('title',d=>`${d.name} · ${d.category || '미분류'} · ${d.reach}개 분야 · 사례 ${d.case_count}건`).html(d=>`${esc(d.name)} <span style="color:var(--faint)">${d.reach}</span>${d.reclassified?' <span style="color:var(--green)">↑</span>':''}`);
+  bodyRows.each(function(tech) {
+    d3.select(this).selectAll('td').data(tech.cells.map(cell=>({tech,cell,major:DATA.common_matrix.majors.find(m=>m.code===cell.major_code)}))).join('td')
+      .append('button').attr('type','button').attr('class',d=>`matrix-cell ${d.cell.present?'present':''} ${d.cell.importance?'imp-'+d.cell.importance:''} ${d.cell.evidence_level==='inferred'?'inferred':''}`)
+      .attr('aria-label',d=>`${d.tech.name}, ${d.major.code} ${d.major.name}: ${d.cell.present?`사례 ${d.cell.case_count}건, 중요도 ${d.cell.importance}, ${d.cell.evidence_level==='explicit'?'명시':'추정'} 근거`:'근거 없음'}`)
+      .attr('title',d=>`${d.tech.name} × ${d.major.code} ${d.major.name} — ${d.cell.present?`사례 ${d.cell.case_count}건 · 중요도 ${d.cell.importance} · ${d.cell.evidence_level}`:'근거 없음'}`)
+      .on('click focus',(_,d)=>{
+        document.getElementById('matrixDetail').innerHTML = `<b style="color:var(--text)">${esc(d.tech.name)}</b> × <b style="color:var(--text)">${esc(d.major.code)} ${esc(d.major.name)}</b> — ${d.cell.present?`근거 사례 ${fmt(d.cell.case_count)}건 · 중요도 ${esc(d.cell.importance)} · ${d.cell.evidence_level==='explicit'?'명시 근거':'추정 근거'}`:'현재 배치 근거 없음'}`;
+      });
+  });
+}
+
+function renderComparisons() {
+  renderDonut(); renderEvidence(); renderYears();
+}
+
+function renderDonut() {
+  const data = DATA.region_distribution, total = d3.sum(data,d=>d.value), width=280, height=238, radius=82;
+  const svg=d3.select('#regionChart').attr('viewBox',`0 0 ${width} ${height}`).html('');
+  const g=svg.append('g').attr('transform',`translate(${width/2},${height/2-5})`);
+  const pie=d3.pie().sort(null).value(d=>d.value)(data), arc=d3.arc().innerRadius(51).outerRadius(radius);
+  g.selectAll('path').data(pie).join('path').attr('d',arc).attr('fill',d=>d.data.key==='overseas'?'var(--blue)':'var(--green)').append('title').text(d=>`${d.data.label} ${d.data.value}건`);
+  g.append('text').attr('text-anchor','middle').attr('y',-2).attr('fill','var(--text)').attr('font-size',26).attr('font-weight',750).text(fmt(total));
+  g.append('text').attr('text-anchor','middle').attr('y',17).attr('fill','var(--muted)').attr('font-size',11).text('전체 사례');
+  const legend=svg.append('g').attr('transform',`translate(22,${height-30})`);
+  data.forEach((d,i)=>{ const x=i*125; legend.append('circle').attr('cx',x).attr('cy',0).attr('r',5).attr('fill',d.key==='overseas'?'var(--blue)':'var(--green)'); legend.append('text').attr('x',x+10).attr('y',4).attr('fill','var(--muted)').attr('font-size',11).text(`${d.label} ${d.value} (${d3.format('.1%')(d.value/total)})`); });
+}
+
+function renderEvidence() {
+  const groups=[{name:'사례',values:DATA.evidence_distribution.cases},{name:'기술 배치',values:DATA.evidence_distribution.placements}];
+  const width=340,height=238,margin={top:24,right:18,bottom:36,left:58};
+  const svg=d3.select('#evidenceChart').attr('viewBox',`0 0 ${width} ${height}`).html('');
+  const g=svg.append('g').attr('transform',`translate(${margin.left},${margin.top})`), iw=width-margin.left-margin.right, ih=height-margin.top-margin.bottom;
+  const x=d3.scaleBand().domain(groups.map(d=>d.name)).range([0,iw]).padding(.28), max=d3.max(groups,g=>d3.sum(g.values,v=>v.value));
+  const y=d3.scaleLinear().domain([0,max]).nice().range([ih,0]);
+  g.append('g').attr('class','axis').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x));
+  g.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5));
+  groups.forEach(group=>{ let acc=0; group.values.forEach(v=>{ const y0=y(acc+v.value), h=y(acc)-y(acc+v.value); g.append('rect').attr('x',x(group.name)).attr('y',y0).attr('width',x.bandwidth()).attr('height',h).attr('fill',v.key==='explicit'?'var(--green)':'var(--orange)').append('title').text(`${group.name} ${v.label} ${v.value}`); if(h>20) g.append('text').attr('x',x(group.name)+x.bandwidth()/2).attr('y',y0+h/2+4).attr('text-anchor','middle').attr('fill','var(--bg)').attr('font-size',11).attr('font-weight',700).text(v.value); acc+=v.value; }); });
+}
+
+function renderYears() {
+  const data=DATA.year_distribution,width=520,height=238,margin={top:20,right:22,bottom:38,left:48};
+  const svg=d3.select('#yearChart').attr('viewBox',`0 0 ${width} ${height}`).html('');
+  const g=svg.append('g').attr('transform',`translate(${margin.left},${margin.top})`),iw=width-margin.left-margin.right,ih=height-margin.top-margin.bottom;
+  const x=d3.scalePoint().domain(data.map(d=>d.year)).range([0,iw]).padding(.3),y=d3.scaleLinear().domain([0,d3.max(data,d=>d.cases)]).nice().range([ih,0]);
+  g.append('g').attr('class','grid').call(d3.axisLeft(y).ticks(5).tickSize(-iw).tickFormat('')).call(x=>x.select('.domain').remove());
+  g.append('g').attr('class','axis').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x));
+  g.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5));
+  g.append('path').datum(data).attr('fill','none').attr('stroke','var(--purple)').attr('stroke-width',2.5).attr('d',d3.line().x(d=>x(d.year)).y(d=>y(d.cases)));
+  g.selectAll('circle').data(data).join('circle').attr('cx',d=>x(d.year)).attr('cy',d=>y(d.cases)).attr('r',4).attr('fill','var(--purple)').append('title').text(d=>`${d.year}년 ${d.cases}건`);
+  g.selectAll('text.value').data(data.filter(d=>d.cases>=10)).join('text').attr('class','value').attr('x',d=>x(d.year)).attr('y',d=>y(d.cases)-8).attr('text-anchor','middle').attr('fill','var(--text)').attr('font-size',11).text(d=>d.cases);
+}
+
+function renderLineage() {
+  const s=DATA.summary;
+  document.getElementById('lineageGrid').innerHTML = `
+    <div class="lineage-col">
+      <article class="lineage-card"><h3>① 원천·근거</h3><p>국내외 기관·논문·공식 보고서와 사람이 확인 가능한 스냅샷을 source_id로 연결했습니다.</p><ul><li>사례 ${fmt(s.cases)}건</li><li>명시 근거 ${fmt(DATA.evidence_distribution.cases[0].value)}건</li><li>NCS정보망DB 2026-02</li></ul></article>
+      <article class="lineage-card"><h3>② 구조화 데이터</h3><p>사례, 기술, NCS 코드, 근거수준, 중요도, 기술 배치를 JSON으로 분리했습니다.</p></article>
+    </div>
+    <div class="lineage-col">
+      <article class="lineage-card primary"><h3>③ Phase 5 통합·재분류</h3><p>261개 사례의 실제 (대분류, 중분류) 인용을 기준으로 150개 기술을 매번 재계산합니다. 2개 이상 중분류에 등장한 기술 ${s.common_technologies}종은 공통, 1개에만 등장한 ${s.specialized_technologies}종은 특화입니다.</p><ul><li>재분류 ${s.reclassified}종</li><li>기술 배치 ${s.placements}건</li><li>공통·특화 오버랩 ${s.common_specialized_overlap}건</li></ul><div class="file-links"><a href="data/overall_stats_v5.json">Overall JSON</a><a href="data/case_tech_map_v2.json">사례 v2</a><a href="data/ncs_ai_map_v3.json">AI 기술 v3</a><a href="data/ncs_tree_v3.json">NCS 트리 v3</a></div></article>
+    </div>
+    <div class="lineage-col">
+      <article class="lineage-card"><h3>④ 시각화</h3><p>전체 포트폴리오, NCS 계층 트리, 공통기술 매트릭스, 사례-기술 네트워크를 목적별 페이지로 제공합니다.</p><div class="file-links"><a href="overall.html">Overall</a><a href="ai_tech_map_v5.html">Phase 5 기술맵</a><a href="ncs_ai_tree_v2.html">NCS 확장 트리</a><a href="index.html">사례 지식맵</a></div></article>
+      <article class="lineage-card"><h3>⑤ 보고서</h3><p>방법론, 전체 결과, 한계, 전략적 시사점과 재분류 근거를 추적할 수 있습니다.</p><div class="file-links"><a href="report5_ai_tech.html">Phase 5 보고서</a><a href="report4_ncs_ai.html">Phase 4 보고서</a><a href="report.html">사례 분석 보고서</a></div></article>
+    </div>`;
+}
+
+window.addEventListener('resize', () => { if (DATA) { clearTimeout(window.__resizeTimer); window.__resizeTimer=setTimeout(()=>{renderPortfolio();renderComparisons();},120); } });
+</script>
+</body>
+</html>

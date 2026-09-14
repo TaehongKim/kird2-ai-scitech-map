@@ -52,6 +52,9 @@ button:hover{border-color:var(--accent)}
 .p-promo{background:rgba(63,185,80,.16);color:var(--promo);border:1px solid rgba(63,185,80,.4)}
 .virt>.row{background:rgba(188,140,255,.06)}
 .virt>.row>.nm{color:var(--purple)}
+.proposal>.row{background:rgba(57,197,207,.08)}
+.proposal>.row>.nm{color:#39c5cf}
+.p-proposal{background:rgba(57,197,207,.16);color:#39c5cf;border:1px solid rgba(57,197,207,.4)}
 #panel{position:sticky;top:96px;max-height:80vh;overflow:auto}
 .ph{font-size:16px;font-weight:700;margin-bottom:2px}
 .pm{color:var(--text2);font-size:12px;margin-bottom:10px}
@@ -77,8 +80,10 @@ mark{background:rgba(210,153,34,.35);color:var(--text);border-radius:3px;padding
 #matrixWrap{overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:8px}
 table.mtx{border-collapse:collapse;font-size:11.5px;width:max-content}
 table.mtx th,table.mtx td{border:1px solid var(--border);padding:0;text-align:center}
-table.mtx thead th{background:var(--bg3);position:sticky;top:0;z-index:2;padding:6px 3px;font-weight:600;white-space:nowrap;writing-mode:vertical-rl;text-orientation:mixed;height:110px;max-height:110px;cursor:default}
+table.mtx thead th{background:var(--bg3);position:sticky;top:0;z-index:2;padding:6px 3px;font-weight:600;white-space:nowrap;writing-mode:vertical-rl;text-orientation:mixed;height:178px;max-height:178px;cursor:default}
 table.mtx thead th.corner{position:sticky;left:0;top:0;z-index:3;writing-mode:horizontal-tb;height:auto;text-align:left;padding:6px 10px}
+.major-code{color:var(--accent);font-weight:700;margin-bottom:4px}
+.major-name{color:var(--text);font-weight:600}
 table.mtx tbody th{position:sticky;left:0;background:var(--bg2);z-index:1;text-align:left;padding:5px 10px;white-space:nowrap;font-weight:500;cursor:pointer;max-width:220px;overflow:hidden;text-overflow:ellipsis}
 table.mtx tbody th:hover{color:var(--accent)}
 table.mtx tbody th.sel{color:var(--accent);font-weight:700}
@@ -98,7 +103,7 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
   <div class="hrow">
     <h1>AI 공통·특화 기술 맵</h1><span class="badge p5">Phase 5 · 재분류(안)</span>
     <div class="navlinks">
-      <a href="index.html">사례-기술 시각화</a><a href="report.html">보고서</a>
+      <a href="overall.html">Overall</a><a href="index.html">사례-기술 시각화</a><a href="report.html">보고서</a>
       <a href="ncs_ai_tree_v2.html">Phase 4 확장 트리</a><a href="report4_ncs_ai.html">Phase 4 보고서</a>
       <a href="report5_ai_tech.html">Phase 5 보고서</a>
     </div>
@@ -168,6 +173,12 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
 let TREE=null, CASES=null, AIMAP=null, CASEIDX={}, SEL=null, PARENT=new Map();
 let TECHIDX={}; // tech_id -> {name, type, category, definition, used_in_majors, reclassified, prior_type, contexts:[{node_id, node_type, major_code, middle_code, usage, evidence_level, importance, case_ids}]}
 let curTab='tree';
+// 산업현장 전문가가 제출한 NCS 신설·개선 제안서(자료/상세 예제/). 사례-근거 데이터가 아니라
+// 별도 상세 페이지로 전문을 옮겼으므로, 트리에는 고정 링크 항목으로만 얹는다(공식 NCS 아님).
+const PROPOSALS=[
+  {major:'17',middle:'01',name:'신약개발 (전문가 제안·상세)',url:'ncs_proposal_drug_discovery.html'},
+  {major:'15',middle:'11',name:'자율작업 휴머노이드 (전문가 제안·상세)',url:'ncs_proposal_autonomous_humanoid.html'}
+];
 const state={major:'',type:'',ev:'',q:''};
 const mstate={q:'', sort:'reach'};
 const open=new Set();
@@ -307,10 +318,25 @@ function render(){
 }
 
 function renderNode(node, key, level){
+  if(level==='proposal'){
+    var pel=document.createElement('div'); pel.className='node lv-proposal proposal';
+    var prow=document.createElement('div'); prow.className='row';
+    prow.innerHTML='<span class="tw">·</span><span class="code">PDF/DOCX</span>'+
+      '<span class="nm">'+esc(node.name)+'</span><span class="pill p-proposal">상세 보기 →</span>';
+    prow.onclick=function(){ window.open(node.url,'_blank','noopener'); };
+    pel.appendChild(prow);
+    return pel;
+  }
   var el=document.createElement('div');
   el.className='node lv-'+level+(node.virtual?' virt':'');
   var row=document.createElement('div'); row.className='row';
   var kids=(node.children||[]).filter(nodeMatches);
+  if(level==='middle' && !node.virtual){
+    var majorCode=key.split('/')[0];
+    PROPOSALS.filter(function(p){return p.major===majorCode && p.middle===node.code;}).forEach(function(p){
+      kids.push({code:'PROPOSAL-'+p.url,name:p.name,level:'proposal',url:p.url});
+    });
+  }
   var hasKids=kids.length>0, isOpen=open.has(key);
 
   var tw=document.createElement('span'); tw.className='tw'; tw.textContent=hasKids?(isOpen?'▾':'▸'):'·';
@@ -470,7 +496,7 @@ function renderMatrix(){
   if(!commons.length){wrap.innerHTML='<div class="empty">조건에 맞는 공통기술이 없습니다.</div>';return;}
 
   var html='<table class="mtx"><thead><tr><th class="corner">공통기술 ('+commons.length+') \\ 대분류</th>';
-  majors.forEach(function(m){html+='<th title="'+esc(m.code+' '+m.name)+'">'+esc(m.code)+'</th>';});
+  majors.forEach(function(m){html+='<th title="'+esc(m.code+' '+m.name)+'"><span class="major-code">'+esc(m.code)+'</span><span class="major-name">'+esc(m.name)+'</span></th>';});
   html+='</tr></thead><tbody>';
   commons.forEach(function(t){
     html+='<tr><th data-tid="'+t.id+'" class="'+(SEL==='TECH:'+t.id?'sel':'')+'" title="'+esc(t.name)+(t.category?(' · '+esc(t.category)):'')+'">'+esc(t.name)+'</th>';
