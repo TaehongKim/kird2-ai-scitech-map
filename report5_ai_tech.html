@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 공통·특화 기술 재분류 보고서</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+--accent:#58a6ff;--green:#3fb950;--orange:#d29922;--red:#f85149;--purple:#bc8cff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.75;font-size:15px}
+a{color:var(--accent)}
+.page{max-width:1080px;margin:0 auto;padding:0 24px 80px}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:34px 24px;margin-bottom:28px}
+header .in{max-width:1080px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.badge{display:inline-block;background:var(--green);color:#0d1117;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:11px;margin-left:8px;vertical-align:middle}
+.meta{color:var(--text2);font-size:13px}
+.nav{margin-top:14px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px}
+h2{font-size:21px;font-weight:700;margin:44px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+h3{font-size:16.5px;font-weight:700;margin:26px 0 8px;color:var(--accent)}
+h4{font-size:14.5px;font-weight:700;margin:18px 0 6px}
+p{margin:9px 0}
+ul,ol{margin:9px 0 9px 22px} li{margin:4px 0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg3);font-weight:700}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tbl-wrap{overflow-x:auto}
+.callout{background:rgba(63,185,80,.09);border:1px solid rgba(63,185,80,.35);border-radius:9px;padding:14px 16px;margin:16px 0;color:#bdf0c9;font-size:13.5px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:14px}
+.kpi b{display:block;font-size:24px;font-weight:800;letter-spacing:-.5px}
+.kpi span{color:var(--text2);font-size:12px}
+.up{color:var(--green)} .down{color:var(--orange)}
+.tag{font-size:11px;padding:1px 7px;border-radius:9px;font-weight:600;white-space:nowrap}
+.t-promo{background:rgba(63,185,80,.16);color:var(--green);border:1px solid rgba(63,185,80,.4)}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:16px 20px;margin:18px 0}
+.toc ol{margin-left:18px} .toc a{text-decoration:none}
+footer{color:var(--text3);font-size:12px;border-top:1px solid var(--border);margin-top:44px;padding-top:16px}
+code{background:var(--bg3);padding:1px 5px;border-radius:4px;font-size:.9em}
+</style></head><body>
+<header><div class="in">
+<h1>AI 공통·특화 기술 재분류 보고서<span class="badge">Phase 5 · 재분류(안)</span></h1>
+<div class="meta">국가직무능력표준(NCS) 정보망 데이터베이스 2026년 2월 기준 · Phase 4 데이터(261건) 재계산 · 작성일 2026-09-14</div>
+<div class="nav">
+<a href="ai_tech_map_v5.html">Phase 5 시각화(트리·매트릭스)</a><a href="ncs_ai_tree_v2.html">Phase 4 확장 트리</a>
+<a href="report4_ncs_ai.html">Phase 4 보고서</a><a href="index.html">사례-기술 시각화</a><a href="report.html">Phase 1~2 보고서</a>
+</div></div></header>
+<div class="page">
+<div class="cards">
+<div class="kpi"><b>261</b><span>근거 사례(불변)</span></div>
+<div class="kpi"><b>150</b><span>AI 기술(불변)</span></div>
+<div class="kpi"><b>53</b><span class="up">공통기술 (25→53)</span></div>
+<div class="kpi"><b>97</b><span class="down">특화기술 (125→97)</span></div>
+<div class="kpi"><b>28</b><span>재분류(전부 승격)</span></div>
+<div class="kpi"><b>0</b><span>공통·특화 오버랩</span></div>
+</div>
+
+<div class="toc"><b>목차</b><ol>
+<li><a href="#c1">문서의 성격</a></li>
+<li><a href="#c2">문제 진단 — Phase 4 고정 분류의 한계</a></li>
+<li><a href="#c3">재분류 방법론</a></li>
+<li><a href="#c4">재분류 결과</a></li>
+<li><a href="#c5">시각화 UI</a></li>
+<li><a href="#c6">검증</a></li>
+<li><a href="#c7">한계와 후속 과제</a></li>
+<li><a href="#c8">부록 — 승격 기술 전체 목록</a></li>
+</ol></div>
+
+<h2 id="c1">Ⅰ. 문서의 성격</h2>
+<div class="callout"><b>이 문서는 Phase 4 산출물을 대체하지 않습니다.</b>
+Phase 4의 사례 데이터(261건)와 NCS 공식 골격은 그대로 두고, 기술의 공통/특화 <b>분류 방식만</b>
+다시 계산합니다. 사례·근거·URL·usage_desc 원본 문장은 손대지 않았습니다. 산출물은
+<code>outputs/data/ncs_ai_map_v3.json</code>(신규)에만 저장되며 Phase 4의
+<code>ncs_ai_map.json</code>은 그대로 보존됩니다.</div>
+
+<h3>Phase 4와의 관계</h3>
+<p>Phase 4는 NCS 24개 대분류 각각에 "AI 공통기술" 노드를, 81개 중분류 각각에 "AI 특화기술" 노드를
+만들었습니다. 이때 기술이 공통인지 특화인지, 특화라면 어느 중분류 소속인지는 <b>데이터를 사례에
+배치하기 전에 사람이 미리 정한 값</b>이었습니다. Phase 5는 그 소속을 사람이 미리 정하지 않고
+사례가 실제로 인용한 (대분류, 중분류)만으로 매번 다시 계산합니다.</p>
+
+<h2 id="c2">Ⅱ. 문제 진단 — Phase 4 고정 분류의 한계</h2>
+<p>Phase 4 빌드 스크립트(<code>build_ai_ext.py</code>)는 특화기술마다 소속 중분류를 기술 마스터에
+고정값으로 미리 넣어 두고, 그 기술을 인용한 사례를 전부 그 고정 소속 하나로만 집계했습니다.
+그 결과 사례가 실제로는 서로 다른 중분류에서 같은 기술을 인용해도 검증 단계에서는 항상
+"특화기술 단일 중분류 배치 PASS"로 나왔습니다 — 이 검증이 구조적으로 항상 참이 되도록
+설계돼 있었기 때문입니다.</p>
+<div class="tbl-wrap"><table><thead><tr><th>기술</th><th>고정 소속(Phase 4)</th><th>실제 인용(사례 기준)</th><th class="n">근거 사례</th></tr></thead><tbody>
+<tr><td>T23 약물-표적 상호작용 예측</td><td>17-05 (바이오)만</td><td>17-03, 17-05 (화학·바이오)</td><td class="n">9건</td></tr>
+<tr><td>T51 디지털 트윈</td><td>15-03 (기계조립·관리)만</td><td>15-03/06/08/09/11, 19-03 (2개 대분류·6개 중분류)</td><td class="n">9건</td></tr>
+<tr><td>T116 지능형 영상관제 이상행동 탐지</td><td>11-01 (경비)만</td><td>07-01, 11-01 (사회복지·경비, 2개 대분류)</td><td class="n">5건</td></tr>
+</tbody></table></div>
+<p><code>phase4_rules.md</code> 4.3절은 이미 이 상황을 예견해 "2개 이상 중분류에 같은 특화기술이
+필요해지면 상위 대분류 공통기술로 승격할지 결정하라"고 적어 두었지만, Phase 4에서는 이 결정을
+미뤄두고 고정 소속 1곳만 기록했습니다. Phase 5는 이 결정을 "항상 승격한다"로 확정하고
+전체 기술 150종에 일괄 적용합니다.</p>
+
+<h2 id="c3">Ⅲ. 재분류 방법론</h2>
+<p><code>case_tech_map_v2.json</code> 사례 261건이 실제로 인용한 (대분류, 중분류) 조합만으로
+기술마다 소속을 다시 계산합니다. 기술 마스터의 기존 소속 고정값은 참고용(<code>prior_type</code>)
+으로만 남기고 분류 판정에는 쓰지 않습니다.</p>
+<ul>
+<li><b>공통기술</b>: 서로 다른 (대분류,중분류) 쌍 <b>2개 이상</b>에서 인용됨 → 등장하는
+<b>모든</b> 대분류에 <code>AI-C-{대분류}</code> 배치를 만든다.</li>
+<li><b>특화기술</b>: 정확히 <b>1개</b> (대분류,중분류)에서만 인용됨 → <code>AI-D-{대분류}-{중분류}</code>
+배치 1건만 만든다.</li>
+</ul>
+<p>이 두 조건은 서로 배타적이므로 공통·특화 사이에 <b>구조적으로 오버랩이 0</b>입니다. 빌드
+스크립트(<code>tools/phase5/build_ai_tech_v3.py</code>)가 매 실행마다 이를 자체 검증합니다 —
+"공통/특화 동시 배치"와 "특화기술의 다중 소속"이 하나라도 나오면 스크립트가 실패하도록
+만들었습니다. 이 규칙은 Phase 4 규칙 4.2("대분류 안에서 서로 다른 중분류 2개 이상이면
+공통기술로 판정")를 특화기술에도 동일하게 적용해 전체 기술로 일반화한 것입니다.</p>
+
+<h2 id="c4">Ⅳ. 재분류 결과</h2>
+<div class="tbl-wrap"><table><thead><tr><th>구분</th><th class="n">Phase 4 (v2, 고정 분류)</th><th class="n">Phase 5 (v3, 데이터 기반)</th><th>비고</th></tr></thead><tbody>
+<tr><td>공통기술</td><td class="n">25종</td><td class="n">53종</td><td>+28 (전부 특화→공통 승격)</td></tr>
+<tr><td>특화기술</td><td class="n">125종</td><td class="n">97종</td><td>-28</td></tr>
+<tr><td>가상 노드</td><td class="n">87개</td><td class="n">82개</td><td>중분류 특화 노드 5개 소멸(아래 참고)</td></tr>
+<tr><td>기술 배치</td><td class="n">392건</td><td class="n">408건</td><td>공통기술이 여러 대분류에 배치되며 증가</td></tr>
+<tr><td>공통↔특화 오버랩</td><td class="n">해당 없음(고정값이라 오버랩 불가능)</td><td class="n">0건</td><td>배타적 분할 자체 검증 PASS</td></tr>
+</tbody></table></div>
+
+<h3>승격 28건 · 강등 0건</h3>
+<p>기존 공통기술 25종은 재계산에서도 <b>전부</b> 공통 자격을 유지했습니다(강등 0건) — Phase 4가
+"극히 범용적인 기술"로 지정했던 판단이 사례 데이터로도 재확인된 셈입니다. 반대 방향으로
+특화기술 125종 중 28종이 공통으로 승격됐습니다. 전체 목록은 Ⅷ 부록 참고.</p>
+
+<h3>부수 효과 — 중분류 특화 노드 5개 소멸</h3>
+<p>승격으로 인해 아래 중분류들은 남은 특화기술이 0개가 되어 특화 노드 자체가 사라졌습니다
+(그 기술은 이제 상위 대분류 공통기술 노드에서 확인할 수 있습니다):</p>
+<ul><li><code>AI-D-11-01</code> 경비 AI 특화기술</li><li><code>AI-D-15-11</code> 스마트공장(smart factory) AI 특화기술</li><li><code>AI-D-17-04</code> 플라스틱·고무 AI 특화기술</li><li><code>AI-D-21-02</code> 제과·제빵·떡제조 AI 특화기술</li><li><code>AI-D-22-02</code> 공예 AI 특화기술</li></ul>
+
+<h2 id="c5">Ⅴ. 시각화 UI</h2>
+<p>새 페이지 <a href="ai_tech_map_v5.html"><b>ai_tech_map_v5.html</b></a>은 Phase 4
+<code>ncs_ai_tree_v2.html</code>의 계층 트리(대→중→소 접이식 + 우측 상세 패널) 디자인을 계승하면서,
+두 가지를 더했습니다.</p>
+<h3>1. 계층 트리 뷰</h3>
+<p>대분류 24개 → AI 공통기술/중분류 → AI 특화기술 순의 접이식 트리는 그대로 유지하되, 이번에
+승격된 기술 카드에는 <span class="tag t-promo">Phase5 승격(구 특화)</span> 배지를 달아 재분류
+이력을 투명하게 보여줍니다.</p>
+<h3>2. 공통기술 매트릭스 뷰 (신규)</h3>
+<p>트리만으로는 "이 기술이 몇 개 대분류에서 함께 쓰이는지"를 한눈에 보기 어렵습니다. 매트릭스
+뷰는 공통기술 53종(행) × 대분류 24개(열)의 히트맵으로, 칸이 채워진 곳이
+그 대분류에서 실제 근거로 확인된 배치입니다. 색 진하기는 중요도, 점선 테두리는 근거수준
+'추정'을 나타냅니다. 상하위(교차 분야) 관계를 즉시 시각화하기 위한 것입니다.</p>
+<h3>3. 상세 패널 공통화</h3>
+<p>트리·매트릭스 어느 쪽에서 기술을 클릭해도 같은 상세 패널이 뜹니다: 정의, 범주, "이 기술이
+쓰이는 대분류 N개" 칩(클릭 시 트리 뷰로 이동해 그 대분류를 자동으로 펼침), 대분류·중분류별
+활용 설명과 근거 사례 링크.</p>
+
+<h2 id="c6">Ⅵ. 검증</h2>
+<ul>
+<li><b>재분류 자체 검증</b>(<code>build_ai_tech_v3.py</code>): 공통/특화 동시 배치 0건, 특화
+다중소속 0건, 사례에서 전혀 인용되지 않은 기술 0건.</li>
+<li><b>시각화 동작 검증</b>: Playwright 브라우저 브리지가 설치돼 있지 않아(Phase 4와 동일한 제약)
+실브라우저 렌더링은 확인하지 못했습니다. 대신 로컬 HTTP 서버 + Node/jsdom으로 실제 데이터를
+로드해 페이지 스크립트를 그대로 실행했습니다: 트리 전체 펼치기 + 461개 행 전수 클릭, 매트릭스
+탭 전환 + 셀 50개·행 헤더 5개 클릭, 기술 150종 전수 상세패널 렌더링, 교차분야 칩 클릭
+내비게이션까지 실행해 콘솔 예외 0건을 확인했습니다.</li>
+</ul>
+
+<h2 id="c7">Ⅶ. 한계와 후속 과제</h2>
+<ul>
+<li><code>case_tech_map_v2.json</code>의 사례별 <code>common_techs</code>/<code>domain_techs</code>
+배열은 Phase 4 당시 구분을 그대로 담고 있어 v3의 새 분류와 더 이상 일치하지 않습니다. Phase 5는
+이 배열을 "그 사례가 쓴 기술 전체 목록"으로만 사용하고, 공통/특화 판정은 항상
+<code>ncs_ai_map_v3.json</code>의 <code>type</code> 필드를 기준으로 합니다.</li>
+<li>승격 기준(중분류 2개 이상)은 최소 근거 사례 2건을 자동으로 요구하지만, 일부 승격 기술은
+근거 사례가 2~3건으로 적습니다(부록 표의 "근거 사례" 열 참고). 근거 보강이 필요한 항목입니다.</li>
+<li>이 재분류(v3)를 Phase 4 산출물에 병합할지 별도로 유지할지는 아직 결정하지 않았습니다.
+현재는 사용자 지시대로 완전히 분리된 신규 파일로 유지합니다.</li>
+</ul>
+
+<h2 id="c8">Ⅷ. 부록 — 승격 기술 전체 28건</h2>
+<div class="tbl-wrap"><table><thead><tr><th>ID</th><th>기술명</th><th>범주</th><th>인용된 (대분류-중분류)</th><th class="n">대분류 수</th><th class="n">근거 사례</th></tr></thead><tbody>
+<tr><td>T39</td><td>DFT 대리 모델<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>16-02, 17-02, 23-01</td><td class="n">3</td><td class="n">4</td></tr>
+<tr><td>T54</td><td>공정 최적화 AI<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>02-04, 15-03, 15-08, 15-11, 19-03</td><td class="n">3</td><td class="n">9</td></tr>
+<tr><td>T116</td><td>지능형 영상관제 이상행동 탐지<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>07-01, 11-01</td><td class="n">2</td><td class="n">5</td></tr>
+<tr><td>T133</td><td>패션 트렌드·수요 예측<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>08-02, 18-02</td><td class="n">2</td><td class="n">3</td></tr>
+<tr><td>T30</td><td>유전체 변이 탐지<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>06-01, 17-05</td><td class="n">2</td><td class="n">3</td></tr>
+<tr><td>T31</td><td>EHR·임상 데이터 분석<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>06-01, 20-01</td><td class="n">2</td><td class="n">4</td></tr>
+<tr><td>T33</td><td>임상 의사결정 지원<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>06-01, 20-01</td><td class="n">2</td><td class="n">7</td></tr>
+<tr><td>T38</td><td>소재 인포매틱스<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>16-01, 16-02, 17-04</td><td class="n">2</td><td class="n">9</td></tr>
+<tr><td>T44</td><td>고체 전해질 설계<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>16-02, 17-04</td><td class="n">2</td><td class="n">3</td></tr>
+<tr><td>T51</td><td>디지털 트윈<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>15-03, 15-06, 15-08, 15-09, 15-11, 19-03</td><td class="n">2</td><td class="n">9</td></tr>
+<tr><td>T56</td><td>위성 영상 특화 분석<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>15-09, 23-01</td><td class="n">2</td><td class="n">3</td></tr>
+<tr><td>T58</td><td>위성 자율 운영<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>15-09, 23-01</td><td class="n">2</td><td class="n">5</td></tr>
+<tr><td>T68</td><td>자율 실험 로봇 제어<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>15-11, 17-01</td><td class="n">2</td><td class="n">4</td></tr>
+<tr><td>T70</td><td>산업용 휴머노이드 제어<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>09-01, 15-03, 15-11</td><td class="n">2</td><td class="n">6</td></tr>
+<tr><td>T107</td><td>생성형 영상 제작<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>08-02, 08-03</td><td class="n">1</td><td class="n">4</td></tr>
+<tr><td>T142</td><td>발효·베이킹 공정 예측<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>21-01, 21-02</td><td class="n">1</td><td class="n">2</td></tr>
+<tr><td>T145</td><td>생성형 공예·가구 디자인<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>22-01, 22-02</td><td class="n">1</td><td class="n">4</td></tr>
+<tr><td>T23</td><td>약물-표적 상호작용 예측<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>17-03, 17-05</td><td class="n">1</td><td class="n">9</td></tr>
+<tr><td>T25</td><td>자유에너지 계산(FEP)<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>17-03, 17-05</td><td class="n">1</td><td class="n">3</td></tr>
+<tr><td>T28</td><td>분자동역학 시뮬레이션<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>17-03, 17-05</td><td class="n">1</td><td class="n">2</td></tr>
+<tr><td>T35</td><td>결정 구조 안정성 예측<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>16-01, 16-02</td><td class="n">1</td><td class="n">8</td></tr>
+<tr><td>T45</td><td>기후 수치 모델링<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>23-01, 23-03</td><td class="n">1</td><td class="n">7</td></tr>
+<tr><td>T46</td><td>수문 모델링<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>23-01, 23-03</td><td class="n">1</td><td class="n">2</td></tr>
+<tr><td>T55</td><td>자율 탐사 로봇 제어<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>15-09, 15-11</td><td class="n">1</td><td class="n">3</td></tr>
+<tr><td>T59</td><td>항공기 구조 최적화<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>15-01, 15-09</td><td class="n">1</td><td class="n">4</td></tr>
+<tr><td>T92</td><td>대화형 AI 튜터<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>04-02, 04-03</td><td class="n">1</td><td class="n">3</td></tr>
+<tr><td>T93</td><td>자동 채점·피드백<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>04-02, 04-03</td><td class="n">1</td><td class="n">3</td></tr>
+<tr><td>T99</td><td>고립·고독사 위험 예측<span class="tag t-promo" style="margin-left:6px">승격</span></td><td>-</td><td>07-01, 07-02</td><td class="n">1</td><td class="n">4</td></tr>
+</tbody></table></div>
+
+<footer>
+출처: 국가직무능력표준 정보망 데이터베이스(대분류별, 2026년 2월), <a href="https://ncs.go.kr/index.do" target="_blank" rel="noopener">ncs.go.kr</a>.
+AI 확장 노드와 기술 배치는 본 프로젝트가 수집한 국내외 사례를 근거로 도출한 제안이며 공식 표준이 아닙니다.
+원본 데이터: <a href="data/ncs_ai_map_v3.json" target="_blank" rel="noopener">ncs_ai_map_v3.json</a>
+</footer>
+</div>
+</body></html>
