@@ -4,7 +4,7 @@
   "version": "3.0",
   "based_on": "outputs/data/case_tech_map_v2.json (Phase 4, 261건)",
   "ncs_basis": "NCS정보망DB 2026-02 (ncs.go.kr)",
-  "generated_date": "2026-09-14",
+  "generated_date": "2026-09-23",
   "disclaimer": "공식 NCS가 아니다. 이 문서의 노드와 배치는 사례 근거로 도출한 확장(안)이다.",
   "methodology": "기술이 인용된 서로 다른 (대분류,중분류) 쌍이 2개 이상이면 공통기술로, 정확히 1개이면 특화기술로 분류한다. Phase 4처럼 기술마다 소속을 미리 고정하지 않고 사례의 실제 인용만으로 매 실행마다 다시 계산하므로 공통/특화 사이에 구조적으로 오버랩이 없다.",
   "counts": {
@@ -14,9 +14,661 @@
    "cases": 261,
    "common": 53,
    "specialized": 97,
-   "reclassified": 28
-  }
+   "reclassified": 28,
+   "cross_domain": 39
+  },
+  "cross_domain_rule": "AI 공통기술 가운데 2개 이상 대분류의 공통기술 노드(AI-C)에 동시에 배치된 기술을 범분야 AI 공통기술로 본다. 괄호 숫자는 사용 대분류 수."
  },
+ "cross_domain_common": [
+  {
+   "tech_id": "T06",
+   "name": "컴퓨터 비전",
+   "category": "인식·탐지 기술",
+   "major_count": 20,
+   "majors": [
+    "02",
+    "03",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24"
+   ],
+   "case_count": 87
+  },
+  {
+   "tech_id": "T16",
+   "name": "시계열 예측",
+   "category": "분석·예측 기술",
+   "major_count": 20,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06",
+    "07",
+    "09",
+    "10",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24"
+   ],
+   "case_count": 47
+  },
+  {
+   "tech_id": "T01",
+   "name": "딥러닝",
+   "category": "기반 학습 기술",
+   "major_count": 19,
+   "majors": [
+    "05",
+    "06",
+    "07",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24"
+   ],
+   "case_count": 88
+  },
+  {
+   "tech_id": "T02",
+   "name": "머신러닝",
+   "category": "기반 학습 기술",
+   "major_count": 19,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "19",
+    "21",
+    "23",
+    "24"
+   ],
+   "case_count": 73
+  },
+  {
+   "tech_id": "T15",
+   "name": "예측 모델링",
+   "category": "분석·예측 기술",
+   "major_count": 18,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "09",
+    "10",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24"
+   ],
+   "case_count": 59
+  },
+  {
+   "tech_id": "T11",
+   "name": "대형 언어 모델(LLM)",
+   "category": "언어 AI 기술",
+   "major_count": 18,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "12",
+    "13",
+    "15",
+    "16",
+    "17",
+    "19",
+    "20",
+    "22",
+    "23",
+    "24"
+   ],
+   "case_count": 45
+  },
+  {
+   "tech_id": "T14",
+   "name": "이상 탐지",
+   "category": "인식·탐지 기술",
+   "major_count": 16,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "07",
+    "09",
+    "11",
+    "14",
+    "15",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24"
+   ],
+   "case_count": 37
+  },
+  {
+   "tech_id": "T07",
+   "name": "자연어 처리(NLP)",
+   "category": "언어 AI 기술",
+   "major_count": 14,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "13",
+    "16",
+    "17",
+    "18",
+    "20",
+    "22"
+   ],
+   "case_count": 30
+  },
+  {
+   "tech_id": "T08",
+   "name": "생성형 AI",
+   "category": "생성 모델 기술",
+   "major_count": 12,
+   "majors": [
+    "02",
+    "05",
+    "06",
+    "08",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "22"
+   ],
+   "case_count": 35
+  },
+  {
+   "tech_id": "T74",
+   "name": "운용 최적화·스케줄링",
+   "category": "최적화·탐색 기술",
+   "major_count": 12,
+   "majors": [
+    "01",
+    "02",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "18",
+    "19",
+    "22"
+   ],
+   "case_count": 22
+  },
+  {
+   "tech_id": "T03",
+   "name": "강화학습",
+   "category": "기반 학습 기술",
+   "major_count": 10,
+   "majors": [
+    "07",
+    "09",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "19",
+    "20",
+    "23"
+   ],
+   "case_count": 26
+  },
+  {
+   "tech_id": "T20",
+   "name": "멀티모달 AI",
+   "category": "기반 학습 기술",
+   "major_count": 10,
+   "majors": [
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "12",
+    "15",
+    "20",
+    "24"
+   ],
+   "case_count": 15
+  },
+  {
+   "tech_id": "T72",
+   "name": "음성 인식·합성",
+   "category": "인식·탐지 기술",
+   "major_count": 9,
+   "majors": [
+    "01",
+    "02",
+    "04",
+    "05",
+    "07",
+    "08",
+    "13",
+    "20",
+    "24"
+   ],
+   "case_count": 17
+  },
+  {
+   "tech_id": "T04",
+   "name": "트랜스포머",
+   "category": "기반 학습 기술",
+   "major_count": 8,
+   "majors": [
+    "04",
+    "06",
+    "09",
+    "10",
+    "15",
+    "17",
+    "20",
+    "23"
+   ],
+   "case_count": 21
+  },
+  {
+   "tech_id": "T71",
+   "name": "검색증강생성(RAG)",
+   "category": "언어 AI 기술",
+   "major_count": 8,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "12",
+    "19",
+    "23"
+   ],
+   "case_count": 11
+  },
+  {
+   "tech_id": "T17",
+   "name": "AI 에이전트",
+   "category": "자율화 기술",
+   "major_count": 7,
+   "majors": [
+    "05",
+    "07",
+    "11",
+    "13",
+    "15",
+    "17",
+    "19"
+   ],
+   "case_count": 18
+  },
+  {
+   "tech_id": "T75",
+   "name": "문서 이해·정보 추출",
+   "category": "언어 AI 기술",
+   "major_count": 7,
+   "majors": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "19",
+    "21",
+    "22"
+   ],
+   "case_count": 12
+  },
+  {
+   "tech_id": "T19",
+   "name": "지식그래프",
+   "category": "지식 표현 기술",
+   "major_count": 7,
+   "majors": [
+    "01",
+    "03",
+    "04",
+    "16",
+    "17",
+    "20",
+    "23"
+   ],
+   "case_count": 10
+  },
+  {
+   "tech_id": "T05",
+   "name": "그래프 신경망",
+   "category": "기반 학습 기술",
+   "major_count": 6,
+   "majors": [
+    "03",
+    "16",
+    "17",
+    "19",
+    "20",
+    "23"
+   ],
+   "case_count": 13
+  },
+  {
+   "tech_id": "T73",
+   "name": "추천 시스템",
+   "category": "분석·예측 기술",
+   "major_count": 6,
+   "majors": [
+    "02",
+    "04",
+    "08",
+    "10",
+    "12",
+    "18"
+   ],
+   "case_count": 12
+  },
+  {
+   "tech_id": "T18",
+   "name": "자기지도학습",
+   "category": "기반 학습 기술",
+   "major_count": 6,
+   "majors": [
+    "06",
+    "11",
+    "18",
+    "20",
+    "23",
+    "24"
+   ],
+   "case_count": 9
+  },
+  {
+   "tech_id": "T10",
+   "name": "파운데이션 모델",
+   "category": "생성 모델 기술",
+   "major_count": 6,
+   "majors": [
+    "06",
+    "08",
+    "09",
+    "15",
+    "17",
+    "23"
+   ],
+   "case_count": 8
+  },
+  {
+   "tech_id": "T09",
+   "name": "확산 모델",
+   "category": "생성 모델 기술",
+   "major_count": 5,
+   "majors": [
+    "08",
+    "16",
+    "17",
+    "18",
+    "22"
+   ],
+   "case_count": 10
+  },
+  {
+   "tech_id": "T54",
+   "name": "공정 최적화 AI",
+   "category": null,
+   "major_count": 3,
+   "majors": [
+    "02",
+    "15",
+    "19"
+   ],
+   "case_count": 9
+  },
+  {
+   "tech_id": "T39",
+   "name": "DFT 대리 모델",
+   "category": null,
+   "major_count": 3,
+   "majors": [
+    "16",
+    "17",
+    "23"
+   ],
+   "case_count": 4
+  },
+  {
+   "tech_id": "T12",
+   "name": "능동학습",
+   "category": "최적화·탐색 기술",
+   "major_count": 2,
+   "majors": [
+    "16",
+    "17"
+   ],
+   "case_count": 10
+  },
+  {
+   "tech_id": "T38",
+   "name": "소재 인포매틱스",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "16",
+    "17"
+   ],
+   "case_count": 9
+  },
+  {
+   "tech_id": "T51",
+   "name": "디지털 트윈",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "15",
+    "19"
+   ],
+   "case_count": 9
+  },
+  {
+   "tech_id": "T33",
+   "name": "임상 의사결정 지원",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "06",
+    "20"
+   ],
+   "case_count": 7
+  },
+  {
+   "tech_id": "T70",
+   "name": "산업용 휴머노이드 제어",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "09",
+    "15"
+   ],
+   "case_count": 6
+  },
+  {
+   "tech_id": "T116",
+   "name": "지능형 영상관제 이상행동 탐지",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "07",
+    "11"
+   ],
+   "case_count": 5
+  },
+  {
+   "tech_id": "T58",
+   "name": "위성 자율 운영",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "15",
+    "23"
+   ],
+   "case_count": 5
+  },
+  {
+   "tech_id": "T31",
+   "name": "EHR·임상 데이터 분석",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "06",
+    "20"
+   ],
+   "case_count": 4
+  },
+  {
+   "tech_id": "T68",
+   "name": "자율 실험 로봇 제어",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "15",
+    "17"
+   ],
+   "case_count": 4
+  },
+  {
+   "tech_id": "T13",
+   "name": "베이지안 최적화",
+   "category": "최적화·탐색 기술",
+   "major_count": 2,
+   "majors": [
+    "16",
+    "17"
+   ],
+   "case_count": 3
+  },
+  {
+   "tech_id": "T133",
+   "name": "패션 트렌드·수요 예측",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "08",
+    "18"
+   ],
+   "case_count": 3
+  },
+  {
+   "tech_id": "T30",
+   "name": "유전체 변이 탐지",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "06",
+    "17"
+   ],
+   "case_count": 3
+  },
+  {
+   "tech_id": "T44",
+   "name": "고체 전해질 설계",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "16",
+    "17"
+   ],
+   "case_count": 3
+  },
+  {
+   "tech_id": "T56",
+   "name": "위성 영상 특화 분석",
+   "category": null,
+   "major_count": 2,
+   "majors": [
+    "15",
+    "23"
+   ],
+   "case_count": 3
+  }
+ ],
  "technologies": [
   {
    "id": "T01",

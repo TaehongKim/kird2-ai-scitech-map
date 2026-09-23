@@ -6,7 +6,7 @@
 <title>Phase 5 — AI 공통·특화 기술 맵</title>
 <style>
 :root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
-      --accent:#58a6ff;--green:#3fb950;--orange:#d29922;--purple:#bc8cff;--common:#58a6ff;--domain:#d29922;--promo:#3fb950}
+      --accent:#58a6ff;--green:#3fb950;--orange:#d29922;--purple:#bc8cff;--common:#58a6ff;--domain:#d29922;--promo:#3fb950;--xd:#f778ba}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;font-size:14px}
 a{color:var(--accent)}
@@ -23,7 +23,7 @@ h1{font-size:19px;font-weight:700;letter-spacing:-.3px}
 .tab{background:var(--bg3);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;padding:9px 16px;font-size:13px;cursor:pointer;color:var(--text2)}
 .tab.on{background:var(--bg2);color:var(--text);font-weight:600}
 .wrap{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:0 24px 40px;align-items:start}
-@media(max-width:1080px){.wrap{grid-template-columns:1fr}#panel{position:static;max-height:none}}
+.wrap.withlist{grid-template-columns:minmax(0,1fr) 220px 400px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;min-width:0}
 .card.notop{border-top-left-radius:0}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
@@ -55,6 +55,22 @@ button:hover{border-color:var(--accent)}
 .proposal>.row{background:rgba(57,197,207,.08)}
 .proposal>.row>.nm{color:#39c5cf}
 .p-proposal{background:rgba(57,197,207,.16);color:#39c5cf;border:1px solid rgba(57,197,207,.4)}
+/* 범분야 AI 공통기술 */
+.xd>.row{background:rgba(247,120,186,.07)}
+.xd>.row>.nm{color:var(--xd)}
+.lv-xd>.row>.nm{font-weight:700;font-size:14.5px}
+.lv-xdtech>.row>.nm{color:var(--text);font-weight:500}
+.p-xd{background:rgba(247,120,186,.16);color:var(--xd);border:1px solid rgba(247,120,186,.45)}
+.xd-mk{font-size:9.5px;padding:0 5px;border-radius:7px;margin-right:5px;vertical-align:1px}
+/* 기술 목록 컬럼 */
+#tlist{position:sticky;top:96px;max-height:80vh;overflow:auto;padding:12px}
+#tlist .lh{font-size:13.5px;font-weight:700;margin-bottom:2px;word-break:keep-all}
+#tlist .lm{color:var(--text2);font-size:11.5px;margin-bottom:8px}
+.li{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 8px;border-radius:6px;cursor:pointer;border:1px solid transparent;font-size:12.5px}
+.li:hover{background:var(--bg3)}
+.li.on{border-color:var(--accent);background:rgba(88,166,255,.1)}
+.li .ln{flex:1 1 100%;min-width:0;word-break:break-word}
+.tech.flash{outline:2px solid var(--xd);outline-offset:1px}
 #panel{position:sticky;top:96px;max-height:80vh;overflow:auto}
 .ph{font-size:16px;font-weight:700;margin-bottom:2px}
 .pm{color:var(--text2);font-size:12px;margin-bottom:10px}
@@ -96,6 +112,10 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .imp-하{background:rgba(88,166,255,.3)}
 .inferred-mark{outline:1px dashed var(--text3);outline-offset:-1px}
 .mtx-note{font-size:11.5px;color:var(--text2);margin-top:10px}
+/* 좁은 화면: 1열로 쌓고 sticky 해제(위 #tlist/#panel 규칙보다 뒤에 있어야 적용됨) */
+@media(max-width:1080px){.wrap,.wrap.withlist{grid-template-columns:1fr}#panel,#tlist{position:static;max-height:none}#tlist{max-height:40vh}}
+/* 좁은 화면에서도 범분야 기술명 뒤 (대분류 수)가 잘리지 않도록 줄바꿈 허용 */
+.lv-xd>.row>.nm,.lv-xdtech>.row>.nm{white-space:normal;word-break:keep-all}
 </style>
 </head>
 <body>
@@ -136,6 +156,7 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
     <div class="stats" id="stats"></div>
     <div id="tree"></div>
     <div class="legend">
+      <span><span class="dot" style="background:var(--xd)"></span>범분야 AI 공통기술(2개+ 대분류)</span>
       <span><span class="dot" style="background:#8b949e"></span>공식 NCS 분류</span>
       <span><span class="dot" style="background:var(--common)"></span>AI 공통기술(대분류 단위)</span>
       <span><span class="dot" style="background:var(--domain)"></span>AI 특화기술(중분류 하위)</span>
@@ -156,6 +177,8 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
     </div>
   </div>
 
+  <div class="card" id="tlist" style="display:none"></div>
+
   <div class="card" id="panel">
     <div class="ph" id="p-title">노드를 선택하세요</div>
     <div class="pm" id="p-meta">왼쪽에서 대분류·중분류·소분류나 기술을 클릭하면 상세가 표시됩니다.</div>
@@ -173,6 +196,8 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
 let TREE=null, CASES=null, AIMAP=null, CASEIDX={}, SEL=null, PARENT=new Map();
 let TECHIDX={}; // tech_id -> {name, type, category, definition, used_in_majors, reclassified, prior_type, contexts:[{node_id, node_type, major_code, middle_code, usage, evidence_level, importance, case_ids}]}
 let curTab='tree';
+let LIST=null, PANELKEY=null; // 기술 목록 컬럼 상태, 현재 패널에 그려진 노드 키
+const XDKEY='XD', XDNAME='범분야 AI 공통기술';
 // 산업현장 전문가가 제출한 NCS 신설·개선 제안서(자료/상세 예제/). 사례-근거 데이터가 아니라
 // 별도 상세 페이지로 전문을 옮겼으므로, 트리에는 고정 링크 항목으로만 얹는다(공식 NCS 아님).
 const PROPOSALS=[
@@ -219,7 +244,9 @@ function buildTechIndex(){
   });
   var n=AIMAP.metadata.counts.reclassified;
   document.getElementById('reclassSummary').textContent =
-    ' 이번 재계산으로 '+n+'개 기술의 분류가 바뀌었습니다(모두 특화→공통 승격).';
+    ' 이번 재계산으로 '+n+'개 기술의 분류가 바뀌었습니다(모두 특화→공통 승격).'+
+    ' 대분류별 AI 공통기술 가운데 2개 이상 대분류에서 공통으로 쓰이는 기술 '+(AIMAP.metadata.counts.cross_domain||0)+
+    '종을 트리 최상단 「'+XDNAME+'」으로 묶었습니다(괄호 숫자 = 사용 대분류 수).';
 }
 
 function majorName(code){ var m=TREE.tree.find(function(x){return x.code===code;}); return m?m.name:code; }
@@ -229,6 +256,7 @@ function initTabs(){
     el.onclick=function(){
       document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
       el.classList.add('on'); curTab=el.dataset.tab;
+      if(curTab==='matrix') hideList();
       document.getElementById('view-tree').style.display = curTab==='tree'?'':'none';
       document.getElementById('view-matrix').style.display = curTab==='matrix'?'':'none';
     };
@@ -243,7 +271,7 @@ function initFilters(){
   document.getElementById('sub').textContent =
     '공식 분류 대분류 '+m.counts.major+' · 중분류 '+m.counts.middle+' · 소분류 '+m.counts.minor+
     '  |  AI 공통기술 '+AIMAP.metadata.counts.common+'종 · 특화기술 '+AIMAP.metadata.counts.specialized+
-    '종 · 배치 '+m.counts.placements+'건 · 근거 사례 '+CASES.metadata.total_cases+'건 (기준일 '+m.generated_date+')';
+    '종 · 범분야 공통 '+(AIMAP.metadata.counts.cross_domain||0)+'종 · 배치 '+m.counts.placements+'건 · 근거 사례 '+CASES.metadata.total_cases+'건 (기준일 '+m.generated_date+')';
   ['f-major','f-type','f-ev'].forEach(function(id){
     document.getElementById(id).addEventListener('change',function(e){state[id.slice(2)]=e.target.value; render();});
   });
@@ -264,7 +292,7 @@ function initMatrixControls(){
 }
 
 function allKeys(){
-  var ks=[];
+  var ks=[XDKEY];
   TREE.tree.forEach(function(mj){ks.push(mj.code);(mj.children||[]).forEach(function(md){ks.push(mj.code+'/'+md.code);});});
   return ks;
 }
@@ -290,6 +318,7 @@ function render(){
   var root=document.getElementById('tree'); root.innerHTML='';
   var shown=0, cTech=0, dTech=0, cases={}, n=0;
   var frag=document.createDocumentFragment();
+  var xdEl=renderXD(); if(xdEl) frag.appendChild(xdEl);
 
   TREE.tree.forEach(function(mj){
     if(state.major && mj.code!==state.major) return;
@@ -309,12 +338,146 @@ function render(){
   });
   for(var k in cases) n++;
 
-  if(!shown) root.innerHTML='<div class="empty">조건에 맞는 분류가 없습니다.</div>';
+  if(!shown && !xdEl) root.innerHTML='<div class="empty">조건에 맞는 분류가 없습니다.</div>';
   else root.appendChild(frag);
 
   document.getElementById('stats').innerHTML=
     '<span><b>'+shown+'</b>표시 대분류</span><span><b>'+cTech+'</b>AI 공통기술 배치</span>'+
     '<span><b>'+dTech+'</b>AI 특화기술 배치</span><span><b>'+n+'</b>연결 사례</span>';
+  if(LIST) renderList();
+}
+
+/* ---------- 범분야 AI 공통기술 (트리 최상단) ----------
+   필터 규칙: f-type=특화만 → 숨김. f-major 선택 시 그 대분류에서 쓰이는 범분야 기술만 남김.
+   f-ev 선택 시 대분류 공통(AI-C) 배치 중 해당 근거수준이 하나라도 있는 기술만 남김. */
+function xdVisible(x){
+  if(state.major && (x.majors||[]).indexOf(state.major)<0) return false;
+  if(state.ev){
+    var t=TECHIDX[x.tech_id];
+    if(!t || !t.contexts.some(function(c){return c.node_type==='major_common' && c.evidence_level===state.ev;})) return false;
+  }
+  return true;
+}
+function xdItems(){
+  if(!AIMAP.cross_domain_common || state.type==='specialized') return [];
+  return AIMAP.cross_domain_common.filter(xdVisible);
+}
+function xdLabel(x){ return x.name+' ('+x.major_count+')'; }
+
+function renderXD(){
+  var items=xdItems();
+  if(!items.length) return null;
+  var nodeHit=matches(XDNAME);
+  var kids=nodeHit ? items : items.filter(function(x){return matches(x.name);});
+  if(!kids.length) return null;
+  var el=document.createElement('div'); el.className='node lv-xd xd';
+  var row=document.createElement('div'); row.className='row';
+  var isOpen=open.has(XDKEY);
+  row.innerHTML='<span class="tw">'+(isOpen?'▾':'▸')+'</span><span class="code">AI 범분야</span>'+
+    '<span class="nm">'+hl(XDNAME)+'</span><span class="pill p-xd">'+items.length+'개 기술</span>';
+  row.onclick=function(){
+    if(isOpen){open['delete'](XDKEY);} else {open.add(XDKEY);}
+    selectXD(); render();
+  };
+  if(SEL===XDKEY) row.classList.add('sel');
+  el.appendChild(row);
+  if(isOpen){
+    var box=document.createElement('div'); box.className='kids';
+    kids.forEach(function(x){
+      var c=document.createElement('div'); c.className='node lv-xdtech';
+      var r=document.createElement('div'); r.className='row';
+      r.innerHTML='<span class="tw">·</span><span class="code">'+esc(x.tech_id)+'</span>'+
+        '<span class="nm" title="'+esc(x.category||'')+'">'+hl(xdLabel(x))+'</span>'+
+        '<span class="pill p-case">사례 '+x.case_count+'</span>';
+      r.onclick=function(){
+        SEL=XDKEY+'/'+x.tech_id;
+        showXDList(); selectTechById(x.tech_id); render();
+      };
+      if(SEL===XDKEY+'/'+x.tech_id) r.classList.add('sel');
+      c.appendChild(r); box.appendChild(c);
+    });
+    el.appendChild(box);
+  }
+  return el;
+}
+
+function showXDList(){
+  LIST={key:XDKEY, title:XDNAME, sub:'괄호 = 사용 대분류 수',
+    items:function(){ return xdItems().map(function(x){return {tid:x.tech_id,name:xdLabel(x),type:'xd',cases:x.case_count};}); },
+    reselect:selectXD};
+  renderList();
+}
+
+function selectXD(){
+  SEL=XDKEY; PANELKEY=XDKEY;
+  var t=document.getElementById('p-title'), m=document.getElementById('p-meta'), b=document.getElementById('p-body');
+  var items=xdItems();
+  t.textContent=XDNAME;
+  m.innerHTML='대분류 AI 공통기술의 교집합 · '+items.length+'종 · <b style="color:var(--purple)">공식 NCS 아님</b>';
+  b.innerHTML='';
+  var dd=document.createElement('div'); dd.className='def';
+  dd.textContent=(AIMAP.metadata.cross_domain_rule||'')+' 기술 카드를 누르면 분야별 활용과 근거 사례가 표시됩니다.';
+  b.appendChild(dd);
+  if(!items.length){b.insertAdjacentHTML('beforeend','<div class="empty">현재 필터에 해당하는 기술이 없습니다.</div>');}
+  items.forEach(function(x){
+    var d=document.createElement('div'); d.className='tech'; d.dataset.tid=x.tech_id;
+    d.style.cursor='pointer'; d.title='기술 전체 상세(다른 분야 포함) 보기';
+    d.innerHTML='<div class="tn"><span>'+esc(xdLabel(x))+'</span><span class="pill p-xd">범분야</span>'+
+      '<span class="pill p-case">사례 '+x.case_count+'</span></div>'+
+      '<div class="usage">'+esc(x.category||'-')+' · '+x.major_count+'개 대분류에서 사용</div>';
+    d.onclick=function(){ selectTechById(x.tech_id); };
+    b.appendChild(d);
+  });
+  showXDList();
+}
+
+/* ---------- 기술 목록 컬럼 (가상·범분야 노드 선택 시, 패널 왼쪽) ---------- */
+function showNodeList(node,key){
+  LIST={key:key, title:node.name,
+    sub:node.node_type==='major_common'?'사례에서 도출된 각분야 공통기술':'사례에서 도출된 AI 특화기술',
+    items:function(){ return (node.techs||[]).filter(techVisible).map(function(tc){
+      return {tid:tc.tech_id,name:tc.name,type:tc.type,cases:(tc.case_ids||[]).length}; }); },
+    reselect:function(){ select(node,key); }};
+  renderList();
+}
+function hideList(){
+  LIST=null;
+  document.getElementById('tlist').style.display='none';
+  document.querySelector('.wrap').classList.remove('withlist');
+}
+function renderList(){
+  var box=document.getElementById('tlist');
+  if(!LIST){hideList();return;}
+  var prev=box.querySelector('.li.on'), activeTid=prev?prev.dataset.tid:null;
+  var items=LIST.items();
+  var html='<div class="lh">'+esc(LIST.title)+'</div><div class="lm">'+esc(LIST.sub)+' · '+items.length+'종</div>';
+  if(!items.length) html+='<div class="empty">현재 필터에 해당하는 기술이 없습니다.</div>';
+  items.forEach(function(it){
+    var pill = it.type==='xd' ? '<span class="pill p-xd">범분야</span>'
+      : '<span class="pill '+(it.type==='common'?'p-common':'p-domain')+'">'+(it.type==='common'?'공통':'특화')+'</span>';
+    html+='<div class="li'+(activeTid===it.tid?' on':'')+'" data-tid="'+esc(it.tid)+'"><span class="ln">'+hl(it.name)+'</span>'+
+      pill+'<span class="pill p-case">사례 '+it.cases+'</span></div>';
+  });
+  box.innerHTML=html;
+  box.style.display='';
+  document.querySelector('.wrap').classList.add('withlist');
+  box.querySelectorAll('.li').forEach(function(li){
+    li.onclick=function(){ focusCard(li.dataset.tid); };
+  });
+}
+function markListActive(tid){
+  document.querySelectorAll('#tlist .li').forEach(function(li){ li.classList.toggle('on', li.dataset.tid===tid); });
+}
+function focusCard(tid){
+  if(!LIST) return;
+  if(PANELKEY!==LIST.key) LIST.reselect();
+  markListActive(tid);
+  var body=document.getElementById('p-body');
+  body.querySelectorAll('.tech.flash').forEach(function(x){x.classList.remove('flash');});
+  var card=body.querySelector('.tech[data-tid="'+tid+'"]');
+  if(!card) return;
+  card.classList.add('flash');
+  if(card.scrollIntoView) card.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 
 function renderNode(node, key, level){
@@ -402,6 +565,7 @@ function techCard(tc, opts){
 function selectTechById(tid){
   var t=TECHIDX[tid];
   if(!t) return;
+  PANELKEY='TECH:'+tid;
   var el=document.getElementById('p-title'), m=document.getElementById('p-meta'), b=document.getElementById('p-body');
   el.textContent=t.name+(t.name_en?' ('+t.name_en+')':'');
   var kind = t.type==='common' ? 'AI 공통기술 — '+t.used_in_majors.length+'개 대분류에서 사용' : 'AI 특화기술 (단일 중분류)';
@@ -431,10 +595,11 @@ function selectTechById(tid){
             usage:ctx.usage,case_ids:ctx.case_ids,reclassified:t.reclassified};
     b.appendChild(techCard(tc,{contextLabel:label}));
   });
+  markListActive(tid);
 }
 
 function select(node,key){
-  SEL=key;
+  SEL=key; PANELKEY=key;
   var t=document.getElementById('p-title'), m=document.getElementById('p-meta'), b=document.getElementById('p-body');
   t.textContent=node.name; b.innerHTML='';
 
@@ -443,10 +608,12 @@ function select(node,key){
       ? 'AI 공통기술 (대분류 단위 · 가상 노드)'
       : 'AI 특화기술 (중분류 하위 · 가상 노드)';
     m.innerHTML=esc(kind)+' · 코드 <code>'+esc(node.code)+'</code> · <b style="color:var(--purple)">공식 NCS 아님</b>';
+    showNodeList(node,key);
     var vis=(node.techs||[]).filter(techVisible);
     if(!vis.length){b.innerHTML='<div class="empty">현재 필터에 해당하는 기술이 없습니다.</div>';return;}
     vis.forEach(function(tc){
       var card=techCard(tc);
+      card.dataset.tid=tc.tech_id;
       card.style.cursor='pointer';
       card.title='기술 전체 상세(다른 분야 포함) 보기';
       card.addEventListener('click', (function(id){return function(){selectTechById(id);};})(tc.tech_id));
@@ -455,6 +622,7 @@ function select(node,key){
     return;
   }
 
+  hideList();
   var lv={major:'대분류',middle:'중분류',minor:'소분류'}[node.level]||'';
   var bits=[lv+' · 코드 '+node.code];
   if(node.unit_count!=null) bits.push('능력단위 '+node.unit_count.toLocaleString()+'개');
@@ -484,6 +652,7 @@ function select(node,key){
 /* ---------- 매트릭스 뷰 ---------- */
 function renderMatrix(){
   var wrap=document.getElementById('matrixWrap');
+  var XDSET={}; (AIMAP.cross_domain_common||[]).forEach(function(x){XDSET[x.tech_id]=x.major_count;});
   var majors=TREE.tree.map(function(m){return {code:m.code,name:m.name};});
   var commons=Object.keys(TECHIDX).map(function(id){return Object.assign({id:id},TECHIDX[id]);})
     .filter(function(t){return t.type==='common';})
@@ -499,7 +668,8 @@ function renderMatrix(){
   majors.forEach(function(m){html+='<th title="'+esc(m.code+' '+m.name)+'"><span class="major-code">'+esc(m.code)+'</span><span class="major-name">'+esc(m.name)+'</span></th>';});
   html+='</tr></thead><tbody>';
   commons.forEach(function(t){
-    html+='<tr><th data-tid="'+t.id+'" class="'+(SEL==='TECH:'+t.id?'sel':'')+'" title="'+esc(t.name)+(t.category?(' · '+esc(t.category)):'')+'">'+esc(t.name)+'</th>';
+    html+='<tr><th data-tid="'+t.id+'" class="'+(SEL==='TECH:'+t.id?'sel':'')+'" title="'+esc(t.name)+(t.category?(' · '+esc(t.category)):'')+(XDSET[t.id]?' · 범분야 공통('+XDSET[t.id]+')':'')+'">'+
+      (XDSET[t.id]?'<span class="pill p-xd xd-mk">범</span>':'')+esc(t.name)+'</th>';
     majors.forEach(function(m){
       var ctx=t.contexts.find(function(c){return c.node_type==='major_common' && c.major_code===m.code;});
       if(ctx){
@@ -515,11 +685,11 @@ function renderMatrix(){
   wrap.innerHTML=html;
 
   wrap.querySelectorAll('tbody th').forEach(function(th){
-    th.onclick=function(){ SEL='TECH:'+th.dataset.tid; renderMatrix(); selectTechById(th.dataset.tid); };
+    th.onclick=function(){ hideList(); SEL='TECH:'+th.dataset.tid; renderMatrix(); selectTechById(th.dataset.tid); };
   });
   wrap.querySelectorAll('td.cell').forEach(function(td){
     td.onclick=function(){
-      SEL='TECH:'+td.dataset.tid; renderMatrix();
+      hideList(); SEL='TECH:'+td.dataset.tid; renderMatrix();
       selectTechById(td.dataset.tid);
     };
   });
