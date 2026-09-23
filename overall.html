@@ -228,21 +228,21 @@
         <svg id="portfolioChart" role="img" aria-labelledby="portfolioTitle portfolioDesc"><title id="portfolioTitle">NCS 대분류별 사례와 기술 포트폴리오</title><desc id="portfolioDesc">24개 NCS 대분류별 사례 수와 공통·특화 기술 수를 두 축으로 비교하는 가로 막대 차트입니다.</desc></svg>
       </div>
       <div id="majorDetail" class="selected-detail" aria-live="polite"></div>
-      <div class="legend"><span><i class="swatch"></i>사례</span><span><i class="swatch" style="background:var(--cyan)"></i>공통기술</span><span><i class="swatch" style="background:var(--orange)"></i>특화기술</span></div>
+      <div class="legend"><span><i class="swatch"></i>사례</span><span><i class="swatch" style="background:var(--cyan)"></i>로컬 공통기술</span><span><i class="swatch" style="background:var(--purple)"></i>범분야 기술</span><span><i class="swatch" style="background:var(--orange)"></i>특화기술</span></div>
     </div>
   </section>
 
   <section id="crossDomain">
     <div class="section-head">
       <div><div class="section-no">03 / CROSS-DOMAIN</div><h2>범분야 AI 공통기술</h2></div>
-      <p>대분류별 AI 공통기술(AI-C) 가운데 2개 이상 NCS 대분류에 함께 등장하는 기술을 범분야 AI 공통기술로 묶었습니다. 괄호 숫자는 해당 기술을 쓰는 대분류 수이며, Phase 5 기술맵 계층트리 최상단에도 같은 목록이 표시됩니다.</p>
+      <p>대분류별 AI 공통기술(AI-C) 가운데 5개 이상 NCS 대분류에 함께 등장하는 기술을 범분야 AI 공통기술로 묶었습니다. 괄호 숫자는 해당 기술을 쓰는 대분류 수이며, Phase 5 기술맵 계층트리 최상단에만 같은 목록이 표시됩니다.</p>
     </div>
     <div class="panel cross-panel">
       <div class="cross-rule">
         <div class="eyebrow">Cross-domain rule</div>
         <strong id="crossCount">-</strong>
         <p id="crossRule"></p>
-        <p>중분류 2곳 이상 → 공통기술 규칙을 한 단계 위로 올린 것입니다. 대분류별 공통기술 배치는 그대로 유지하고 범분야는 그 위에 겹쳐 보는 요약층입니다.</p>
+        <p>중분류 2곳 이상 → 공통기술 규칙을 한 단계 위로 올린 것입니다. 대분류별 공통기술 배치는 근거 추적을 위해 유지하되, 트리에서는 범분야 기술을 각 분야 공통기술 목록에서 제외합니다.</p>
         <div class="file-links"><a href="ai_tech_map_v5.html">Phase 5 기술맵에서 보기</a></div>
       </div>
       <div id="crossList" class="cross-list" aria-label="범분야 AI 공통기술 목록"></div>
@@ -253,7 +253,7 @@
   <section id="matrix">
     <div class="section-head">
       <div><div class="section-no">04 / CROSS-FIELD MATRIX</div><h2>공통기술 매트릭스</h2></div>
-      <p>공통기술 53종이 NCS 24개 분야 중 어디에서 실제 사례 근거로 확인됐는지 보여줍니다. 코드만이 아니라 모든 NCS 분야명을 열에 함께 표시합니다.</p>
+      <p>범분야 기술을 포함한 공통기술 53종이 NCS 24개 분야 중 어디에서 실제 사례 근거로 확인됐는지 보여줍니다. 코드만이 아니라 모든 NCS 분야명을 열에 함께 표시합니다.</p>
     </div>
     <div class="panel matrix-panel">
       <div class="matrix-tools">
@@ -333,7 +333,7 @@ function renderKpis() {
     ['기술 배치', s.placements, `가상 노드 ${s.virtual_nodes}개`],
     ['재분류', s.reclassified, '특화 → 공통 승격'],
     ['분류 오버랩', s.common_specialized_overlap, '배타적 분할 검증'],
-    ['범분야 AI 공통기술', s.cross_domain_common, '2개 이상 대분류 공통'],
+    ['범분야 AI 공통기술', s.cross_domain_common, '5개 이상 대분류 공통'],
   ];
   d3.select('#kpis').selectAll('article').data(items).join('article').attr('class','kpi')
     .html(d => `<div class="kpi-value">${fmt(d[1])}</div><div class="kpi-label">${esc(d[0])}</div><div class="kpi-context">${esc(d[2])}</div>`);
@@ -381,7 +381,7 @@ function initControls() {
 function renderPortfolio() {
   const rows = DATA.ncs_majors.map(d => ({...d}));
   if (state.majorSort === 'cases') rows.sort((a,b) => b.cases-a.cases || a.code.localeCompare(b.code));
-  else if (state.majorSort === 'tech') rows.sort((a,b) => (b.common_technologies+b.specialized_technologies)-(a.common_technologies+a.specialized_technologies) || a.code.localeCompare(b.code));
+  else if (state.majorSort === 'tech') rows.sort((a,b) => (b.common_technologies+b.cross_domain_technologies+b.specialized_technologies)-(a.common_technologies+a.cross_domain_technologies+a.specialized_technologies) || a.code.localeCompare(b.code));
   else rows.sort((a,b) => a.code.localeCompare(b.code));
 
   const width = Math.max(920, document.querySelector('.portfolio-wrap').clientWidth || 920);
@@ -394,7 +394,7 @@ function renderPortfolio() {
   const g = svg.append('g').attr('class','chart-root').attr('transform',`translate(${margin.left},${margin.top})`);
   const y = d3.scaleBand().domain(rows.map(d=>d.code)).range([0,rows.length*rowH]).padding(.24);
   const xCases = d3.scaleLinear().domain([0,d3.max(rows,d=>d.cases) || 1]).nice().range([0,caseW]);
-  const xTech = d3.scaleLinear().domain([0,d3.max(rows,d=>d.common_technologies+d.specialized_technologies) || 1]).nice().range([0,techW]);
+  const xTech = d3.scaleLinear().domain([0,d3.max(rows,d=>d.common_technologies+d.cross_domain_technologies+d.specialized_technologies) || 1]).nice().range([0,techW]);
 
   g.append('g').attr('class','grid').call(d3.axisTop(xCases).ticks(5).tickSize(-rows.length*rowH).tickFormat('')).call(x=>x.select('.domain').remove());
   g.append('g').attr('class','axis').call(d3.axisTop(xCases).ticks(5));
@@ -407,11 +407,12 @@ function renderPortfolio() {
   row.append('rect').attr('x',0).attr('y',0).attr('width',d=>xCases(d.cases)).attr('height',y.bandwidth()).attr('rx',3).attr('fill','var(--blue)').attr('opacity',d=>d.code===state.selectedMajor?1:.68);
   row.append('text').attr('x',d=>xCases(d.cases)+6).attr('y',y.bandwidth()/2+4).attr('class','chart-label').text(d=>d.cases);
   row.append('rect').attr('x',techX).attr('y',0).attr('width',d=>xTech(d.common_technologies)).attr('height',y.bandwidth()).attr('fill','var(--cyan)').attr('opacity',d=>d.code===state.selectedMajor?1:.72);
-  row.append('rect').attr('x',d=>techX+xTech(d.common_technologies)).attr('y',0).attr('width',d=>xTech(d.specialized_technologies)).attr('height',y.bandwidth()).attr('fill','var(--orange)').attr('opacity',d=>d.code===state.selectedMajor?1:.78);
-  row.append('text').attr('x',d=>techX+xTech(d.common_technologies+d.specialized_technologies)+6).attr('y',y.bandwidth()/2+4).attr('class','chart-label').text(d=>d.common_technologies+d.specialized_technologies);
+  row.append('rect').attr('x',d=>techX+xTech(d.common_technologies)).attr('y',0).attr('width',d=>xTech(d.cross_domain_technologies)).attr('height',y.bandwidth()).attr('fill','var(--purple)').attr('opacity',d=>d.code===state.selectedMajor?1:.82);
+  row.append('rect').attr('x',d=>techX+xTech(d.common_technologies+d.cross_domain_technologies)).attr('y',0).attr('width',d=>xTech(d.specialized_technologies)).attr('height',y.bandwidth()).attr('fill','var(--orange)').attr('opacity',d=>d.code===state.selectedMajor?1:.78);
+  row.append('text').attr('x',d=>techX+xTech(d.common_technologies+d.cross_domain_technologies+d.specialized_technologies)+6).attr('y',y.bandwidth()/2+4).attr('class','chart-label').text(d=>d.common_technologies+d.cross_domain_technologies+d.specialized_technologies);
 
   const d = DATA.ncs_majors.find(x=>x.code===state.selectedMajor) || DATA.ncs_majors[0];
-  document.getElementById('majorDetail').innerHTML = `<strong>${esc(d.code)} ${esc(d.name)}</strong><span>사례 ${fmt(d.cases)}건 (해외 ${fmt(d.overseas_cases)} · 국내 ${fmt(d.domestic_cases)}) · 공통기술 ${fmt(d.common_technologies)}종 · 특화기술 ${fmt(d.specialized_technologies)}종 · 배치 ${fmt(d.placements)}건 · 명시 ${fmt(d.explicit_placements)} / 추정 ${fmt(d.inferred_placements)}</span>`;
+  document.getElementById('majorDetail').innerHTML = `<strong>${esc(d.code)} ${esc(d.name)}</strong><span>사례 ${fmt(d.cases)}건 (해외 ${fmt(d.overseas_cases)} · 국내 ${fmt(d.domestic_cases)}) · 로컬 공통기술 ${fmt(d.common_technologies)}종 · 범분야 ${fmt(d.cross_domain_technologies)}종 · 특화기술 ${fmt(d.specialized_technologies)}종 · 배치 ${fmt(d.placements)}건 · 명시 ${fmt(d.explicit_placements)} / 추정 ${fmt(d.inferred_placements)}</span>`;
 }
 
 function renderMatrix() {
@@ -420,7 +421,7 @@ function renderMatrix() {
   if (state.matrixSort === 'cases') rows.sort((a,b)=>b.case_count-a.case_count || b.reach-a.reach);
   else if (state.matrixSort === 'name') rows.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
   else rows.sort((a,b)=>b.reach-a.reach || b.case_count-a.case_count || a.name.localeCompare(b.name,'ko'));
-  document.getElementById('matrixCount').textContent = `공통기술 ${rows.length} / ${DATA.common_matrix.technologies.length}종 · NCS ${DATA.common_matrix.majors.length}개 분야`;
+  document.getElementById('matrixCount').textContent = `공통기술 ${rows.length} / ${DATA.common_matrix.technologies.length}종 · 범분야 포함 · NCS ${DATA.common_matrix.majors.length}개 분야`;
 
   const table = d3.select('#matrixWrap').html('').append('table').attr('class','matrix');
   const head = table.append('thead').append('tr');

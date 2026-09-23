@@ -29,7 +29,7 @@
   "virtual_nodes": 82,
   "reclassified": 28,
   "common_specialized_overlap": 0,
-  "cross_domain_common": 39
+  "cross_domain_common": 23
  },
  "phases": [
   {
@@ -59,8 +59,8 @@
   {
    "phase": 5,
    "title": "배타적 재분류·Overall",
-   "summary": "실제 사례 인용 범위로 공통·특화 기술을 재계산하고, 2개 이상 대분류 공통기술을 범분야 AI 공통기술로 묶어 전체 데이터와 통계를 통합",
-   "metric": "공통 53 · 특화 97 · 범분야 39 · 오버랩 0"
+   "summary": "실제 사례 인용 범위로 공통·특화 기술을 재계산하고, 5개 이상 대분류 공통기술을 범분야 AI 공통기술으로 묶어 전체 데이터와 통계를 통합",
+   "metric": "공통 53 · 특화 97 · 범분야 23 · 오버랩 0"
   }
  ],
  "phase_comparison": {
@@ -81,7 +81,8 @@
    "cases": 8,
    "domestic_cases": 3,
    "overseas_cases": 5,
-   "common_technologies": 11,
+   "common_technologies": 0,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 2,
    "placements": 13,
    "explicit_placements": 8,
@@ -93,7 +94,8 @@
    "cases": 11,
    "domestic_cases": 3,
    "overseas_cases": 8,
-   "common_technologies": 14,
+   "common_technologies": 1,
+   "cross_domain_technologies": 13,
    "specialized_technologies": 7,
    "placements": 21,
    "explicit_placements": 13,
@@ -105,7 +107,8 @@
    "cases": 8,
    "domestic_cases": 4,
    "overseas_cases": 4,
-   "common_technologies": 11,
+   "common_technologies": 0,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 6,
    "placements": 17,
    "explicit_placements": 10,
@@ -117,7 +120,8 @@
    "cases": 8,
    "domestic_cases": 3,
    "overseas_cases": 5,
-   "common_technologies": 10,
+   "common_technologies": 2,
+   "cross_domain_technologies": 8,
    "specialized_technologies": 2,
    "placements": 12,
    "explicit_placements": 11,
@@ -129,7 +133,8 @@
    "cases": 9,
    "domestic_cases": 5,
    "overseas_cases": 4,
-   "common_technologies": 13,
+   "common_technologies": 0,
+   "cross_domain_technologies": 13,
    "specialized_technologies": 5,
    "placements": 18,
    "explicit_placements": 12,
@@ -141,7 +146,8 @@
    "cases": 11,
    "domestic_cases": 2,
    "overseas_cases": 9,
-   "common_technologies": 14,
+   "common_technologies": 3,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 3,
    "placements": 17,
    "explicit_placements": 10,
@@ -153,7 +159,8 @@
    "cases": 8,
    "domestic_cases": 5,
    "overseas_cases": 3,
-   "common_technologies": 13,
+   "common_technologies": 2,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 3,
    "placements": 16,
    "explicit_placements": 10,
@@ -165,7 +172,8 @@
    "cases": 11,
    "domestic_cases": 3,
    "overseas_cases": 8,
-   "common_technologies": 12,
+   "common_technologies": 2,
+   "cross_domain_technologies": 10,
    "specialized_technologies": 4,
    "placements": 16,
    "explicit_placements": 13,
@@ -177,7 +185,8 @@
    "cases": 9,
    "domestic_cases": 5,
    "overseas_cases": 4,
-   "common_technologies": 12,
+   "common_technologies": 1,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 4,
    "placements": 16,
    "explicit_placements": 11,
@@ -189,7 +198,8 @@
    "cases": 8,
    "domestic_cases": 2,
    "overseas_cases": 6,
-   "common_technologies": 8,
+   "common_technologies": 0,
+   "cross_domain_technologies": 8,
    "specialized_technologies": 4,
    "placements": 12,
    "explicit_placements": 8,
@@ -201,7 +211,8 @@
    "cases": 8,
    "domestic_cases": 5,
    "overseas_cases": 3,
-   "common_technologies": 7,
+   "common_technologies": 1,
+   "cross_domain_technologies": 6,
    "specialized_technologies": 1,
    "placements": 8,
    "explicit_placements": 7,
@@ -213,7 +224,8 @@
    "cases": 8,
    "domestic_cases": 2,
    "overseas_cases": 6,
-   "common_technologies": 10,
+   "common_technologies": 0,
+   "cross_domain_technologies": 10,
    "specialized_technologies": 5,
    "placements": 15,
    "explicit_placements": 9,
@@ -225,7 +237,8 @@
    "cases": 8,
    "domestic_cases": 4,
    "overseas_cases": 4,
-   "common_technologies": 11,
+   "common_technologies": 0,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 3,
    "placements": 14,
    "explicit_placements": 9,
@@ -237,7 +250,8 @@
    "cases": 8,
    "domestic_cases": 3,
    "overseas_cases": 5,
-   "common_technologies": 9,
+   "common_technologies": 0,
+   "cross_domain_technologies": 9,
    "specialized_technologies": 6,
    "placements": 15,
    "explicit_placements": 10,
@@ -249,7 +263,8 @@
    "cases": 23,
    "domestic_cases": 9,
    "overseas_cases": 14,
-   "common_technologies": 22,
+   "common_technologies": 8,
+   "cross_domain_technologies": 14,
    "specialized_technologies": 1,
    "placements": 23,
    "explicit_placements": 22,
@@ -261,7 +276,8 @@
    "cases": 12,
    "domestic_cases": 3,
    "overseas_cases": 9,
-   "common_technologies": 17,
+   "common_technologies": 6,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 2,
    "placements": 19,
    "explicit_placements": 10,
@@ -273,7 +289,8 @@
    "cases": 20,
    "domestic_cases": 3,
    "overseas_cases": 17,
-   "common_technologies": 23,
+   "common_technologies": 10,
+   "cross_domain_technologies": 13,
    "specialized_technologies": 7,
    "placements": 30,
    "explicit_placements": 24,
@@ -285,7 +302,8 @@
    "cases": 8,
    "domestic_cases": 2,
    "overseas_cases": 6,
-   "common_technologies": 12,
+   "common_technologies": 1,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 2,
    "placements": 14,
    "explicit_placements": 7,
@@ -297,7 +315,8 @@
    "cases": 11,
    "domestic_cases": 9,
    "overseas_cases": 2,
-   "common_technologies": 16,
+   "common_technologies": 2,
+   "cross_domain_technologies": 14,
    "specialized_technologies": 4,
    "placements": 20,
    "explicit_placements": 12,
@@ -309,7 +328,8 @@
    "cases": 13,
    "domestic_cases": 4,
    "overseas_cases": 9,
-   "common_technologies": 17,
+   "common_technologies": 2,
+   "cross_domain_technologies": 15,
    "specialized_technologies": 7,
    "placements": 24,
    "explicit_placements": 18,
@@ -321,7 +341,8 @@
    "cases": 8,
    "domestic_cases": 4,
    "overseas_cases": 4,
-   "common_technologies": 8,
+   "common_technologies": 1,
+   "cross_domain_technologies": 7,
    "specialized_technologies": 2,
    "placements": 10,
    "explicit_placements": 9,
@@ -333,7 +354,8 @@
    "cases": 8,
    "domestic_cases": 2,
    "overseas_cases": 6,
-   "common_technologies": 12,
+   "common_technologies": 1,
+   "cross_domain_technologies": 11,
    "specialized_technologies": 2,
    "placements": 14,
    "explicit_placements": 9,
@@ -345,7 +367,8 @@
    "cases": 20,
    "domestic_cases": 4,
    "overseas_cases": 16,
-   "common_technologies": 19,
+   "common_technologies": 5,
+   "cross_domain_technologies": 14,
    "specialized_technologies": 7,
    "placements": 26,
    "explicit_placements": 18,
@@ -357,7 +380,8 @@
    "cases": 15,
    "domestic_cases": 7,
    "overseas_cases": 8,
-   "common_technologies": 10,
+   "common_technologies": 0,
+   "cross_domain_technologies": 10,
    "specialized_technologies": 8,
    "placements": 18,
    "explicit_placements": 12,
@@ -9901,7 +9925,7 @@
   ]
  },
  "cross_domain_common": {
-  "rule": "AI 공통기술 가운데 2개 이상 대분류의 공통기술 노드(AI-C)에 동시에 배치된 기술을 범분야 AI 공통기술로 본다. 괄호 숫자는 사용 대분류 수.",
+  "rule": "AI 공통기술 가운데 5개 이상 대분류의 공통기술 노드(AI-C)에 동시에 배치된 기술을 범분야 AI 공통기술로 본다. 괄호 숫자는 사용 대분류 수.",
   "technologies": [
    {
     "id": "T06",
@@ -11184,302 +11208,6 @@
      }
     ],
     "case_count": 10
-   },
-   {
-    "id": "T54",
-    "name": "공정 최적화 AI",
-    "label": "공정 최적화 AI (3)",
-    "category": null,
-    "major_count": 3,
-    "majors": [
-     {
-      "code": "02",
-      "name": "경영·회계·사무"
-     },
-     {
-      "code": "15",
-      "name": "기계"
-     },
-     {
-      "code": "19",
-      "name": "전기·전자"
-     }
-    ],
-    "case_count": 9
-   },
-   {
-    "id": "T39",
-    "name": "DFT 대리 모델",
-    "label": "DFT 대리 모델 (3)",
-    "category": null,
-    "major_count": 3,
-    "majors": [
-     {
-      "code": "16",
-      "name": "재료"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     },
-     {
-      "code": "23",
-      "name": "환경·에너지·안전"
-     }
-    ],
-    "case_count": 4
-   },
-   {
-    "id": "T12",
-    "name": "능동학습",
-    "label": "능동학습 (2)",
-    "category": "최적화·탐색 기술",
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "16",
-      "name": "재료"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     }
-    ],
-    "case_count": 10
-   },
-   {
-    "id": "T38",
-    "name": "소재 인포매틱스",
-    "label": "소재 인포매틱스 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "16",
-      "name": "재료"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     }
-    ],
-    "case_count": 9
-   },
-   {
-    "id": "T51",
-    "name": "디지털 트윈",
-    "label": "디지털 트윈 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "15",
-      "name": "기계"
-     },
-     {
-      "code": "19",
-      "name": "전기·전자"
-     }
-    ],
-    "case_count": 9
-   },
-   {
-    "id": "T33",
-    "name": "임상 의사결정 지원",
-    "label": "임상 의사결정 지원 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "06",
-      "name": "보건·의료"
-     },
-     {
-      "code": "20",
-      "name": "정보통신"
-     }
-    ],
-    "case_count": 7
-   },
-   {
-    "id": "T70",
-    "name": "산업용 휴머노이드 제어",
-    "label": "산업용 휴머노이드 제어 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "09",
-      "name": "운전·운송"
-     },
-     {
-      "code": "15",
-      "name": "기계"
-     }
-    ],
-    "case_count": 6
-   },
-   {
-    "id": "T116",
-    "name": "지능형 영상관제 이상행동 탐지",
-    "label": "지능형 영상관제 이상행동 탐지 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "07",
-      "name": "사회복지·종교"
-     },
-     {
-      "code": "11",
-      "name": "경비·청소"
-     }
-    ],
-    "case_count": 5
-   },
-   {
-    "id": "T58",
-    "name": "위성 자율 운영",
-    "label": "위성 자율 운영 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "15",
-      "name": "기계"
-     },
-     {
-      "code": "23",
-      "name": "환경·에너지·안전"
-     }
-    ],
-    "case_count": 5
-   },
-   {
-    "id": "T31",
-    "name": "EHR·임상 데이터 분석",
-    "label": "EHR·임상 데이터 분석 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "06",
-      "name": "보건·의료"
-     },
-     {
-      "code": "20",
-      "name": "정보통신"
-     }
-    ],
-    "case_count": 4
-   },
-   {
-    "id": "T68",
-    "name": "자율 실험 로봇 제어",
-    "label": "자율 실험 로봇 제어 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "15",
-      "name": "기계"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     }
-    ],
-    "case_count": 4
-   },
-   {
-    "id": "T13",
-    "name": "베이지안 최적화",
-    "label": "베이지안 최적화 (2)",
-    "category": "최적화·탐색 기술",
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "16",
-      "name": "재료"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     }
-    ],
-    "case_count": 3
-   },
-   {
-    "id": "T133",
-    "name": "패션 트렌드·수요 예측",
-    "label": "패션 트렌드·수요 예측 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "08",
-      "name": "문화·예술·디자인·방송"
-     },
-     {
-      "code": "18",
-      "name": "섬유·의복"
-     }
-    ],
-    "case_count": 3
-   },
-   {
-    "id": "T30",
-    "name": "유전체 변이 탐지",
-    "label": "유전체 변이 탐지 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "06",
-      "name": "보건·의료"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     }
-    ],
-    "case_count": 3
-   },
-   {
-    "id": "T44",
-    "name": "고체 전해질 설계",
-    "label": "고체 전해질 설계 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "16",
-      "name": "재료"
-     },
-     {
-      "code": "17",
-      "name": "화학·바이오"
-     }
-    ],
-    "case_count": 3
-   },
-   {
-    "id": "T56",
-    "name": "위성 영상 특화 분석",
-    "label": "위성 영상 특화 분석 (2)",
-    "category": null,
-    "major_count": 2,
-    "majors": [
-     {
-      "code": "15",
-      "name": "기계"
-     },
-     {
-      "code": "23",
-      "name": "환경·에너지·안전"
-     }
-    ],
-    "case_count": 3
    }
   ]
  },
