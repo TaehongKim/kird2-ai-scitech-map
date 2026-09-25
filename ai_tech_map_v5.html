@@ -22,8 +22,12 @@ h1{font-size:19px;font-weight:700;letter-spacing:-.3px}
 .tabs{display:flex;gap:8px;padding:0 24px;margin-top:14px}
 .tab{background:var(--bg3);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;padding:9px 16px;font-size:13px;cursor:pointer;color:var(--text2)}
 .tab.on{background:var(--bg2);color:var(--text);font-weight:600}
-.wrap{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:0 24px 40px;align-items:start}
-.wrap.withlist{grid-template-columns:minmax(0,1fr) 220px 400px}
+.wrap{display:grid;grid-template-columns:minmax(280px,1fr) 10px 400px;gap:0;padding:0 24px 40px;align-items:start}
+.wrap.withlist{grid-template-columns:minmax(280px,1fr) 10px 220px 10px 400px}
+.split{align-self:stretch;position:relative;cursor:col-resize;background:transparent;touch-action:none}
+.split::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);background:var(--border);border-radius:1px;transition:background .12s}
+.split:hover::before,.split.dragging::before{background:var(--accent)}
+.split:focus-visible::before{background:var(--accent);width:3px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;min-width:0}
 .card.notop{border-top-left-radius:0}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
@@ -113,7 +117,7 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .inferred-mark{outline:1px dashed var(--text3);outline-offset:-1px}
 .mtx-note{font-size:11.5px;color:var(--text2);margin-top:10px}
 /* 좁은 화면: 1열로 쌓고 sticky 해제(위 #tlist/#panel 규칙보다 뒤에 있어야 적용됨) */
-@media(max-width:1080px){.wrap,.wrap.withlist{grid-template-columns:1fr}#panel,#tlist{position:static;max-height:none}#tlist{max-height:40vh}}
+@media(max-width:1080px){.wrap,.wrap.withlist{grid-template-columns:1fr}#panel,#tlist{position:static;max-height:none}#tlist{max-height:40vh}.split{display:none}}
 /* 좁은 화면에서도 범분야 기술명 뒤 (대분류 수)가 잘리지 않도록 줄바꿈 허용 */
 .lv-xd>.row>.nm,.lv-xdtech>.row>.nm{white-space:normal;word-break:keep-all}
 </style>
@@ -177,7 +181,11 @@ td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px}
     </div>
   </div>
 
+  <div class="split" id="split-list" style="display:none" tabindex="0" role="separator" aria-orientation="vertical" aria-label="목록 너비 조절" aria-valuetext="기술 목록 컬럼 너비"></div>
+
   <div class="card" id="tlist" style="display:none"></div>
+
+  <div class="split" id="split-panel" tabindex="0" role="separator" aria-orientation="vertical" aria-label="상세 패널 너비 조절" aria-valuetext="상세 패널 너비"></div>
 
   <div class="card" id="panel">
     <div class="ph" id="p-title">노드를 선택하세요</div>
@@ -208,6 +216,99 @@ const state={major:'',type:'',ev:'',q:''};
 const mstate={q:'', sort:'reach'};
 const open=new Set();
 
+/* ---------- 컬럼 너비 조절(드래그) ---------- */
+const COLW_KEY='aiTechMapV5.colWidths';
+const COLW_DEFAULT={listWidth:220, panelWidth:400};
+const COLW_MIN={list:160, panel:300, tree:320};
+const COLW_MAX={list:360, panel:640};
+const SPLIT_W=10; // 각 splitter 트랙 폭(px), CSS grid-template-columns 값과 일치해야 함
+let listWidth=COLW_DEFAULT.listWidth, panelWidth=COLW_DEFAULT.panelWidth;
+
+function loadColWidths(){
+  try{
+    var raw=localStorage.getItem(COLW_KEY);
+    if(raw){
+      var obj=JSON.parse(raw);
+      if(obj && typeof obj.listWidth==='number' && isFinite(obj.listWidth)) listWidth=obj.listWidth;
+      if(obj && typeof obj.panelWidth==='number' && isFinite(obj.panelWidth)) panelWidth=obj.panelWidth;
+    }
+  }catch(e){ /* localStorage 사용 불가 시 기본값 유지 */ }
+}
+function saveColWidths(){
+  try{ localStorage.setItem(COLW_KEY, JSON.stringify({listWidth:listWidth, panelWidth:panelWidth})); }
+  catch(e){ /* 저장 실패는 무시(시크릿 모드 등) */ }
+}
+function clampColWidths(withList){
+  panelWidth=Math.max(COLW_MIN.panel, Math.min(COLW_MAX.panel, panelWidth));
+  listWidth=Math.max(COLW_MIN.list, Math.min(COLW_MAX.list, listWidth));
+  var wrap=document.querySelector('.wrap');
+  var total=wrap?wrap.clientWidth:0;
+  if(!total) return;
+  var splitTotal = withList ? SPLIT_W*2 : SPLIT_W;
+  var fixedTotal = withList ? (listWidth+panelWidth) : panelWidth;
+  var avail = total - splitTotal - fixedTotal;
+  if(avail < COLW_MIN.tree){
+    var deficit = COLW_MIN.tree - avail;
+    var shrinkPanel = Math.min(deficit, panelWidth-COLW_MIN.panel);
+    panelWidth -= shrinkPanel; deficit -= shrinkPanel;
+    if(deficit>0 && withList){
+      var shrinkList = Math.min(deficit, listWidth-COLW_MIN.list);
+      listWidth -= shrinkList; deficit -= shrinkList;
+    }
+  }
+}
+function applyGridTemplate(){
+  var wrap=document.querySelector('.wrap');
+  if(!wrap) return;
+  if(window.innerWidth<=1080){ wrap.style.gridTemplateColumns=''; return; }
+  var withList=wrap.classList.contains('withlist');
+  clampColWidths(withList);
+  wrap.style.gridTemplateColumns = withList
+    ? 'minmax(280px,1fr) '+SPLIT_W+'px '+listWidth+'px '+SPLIT_W+'px '+panelWidth+'px'
+    : 'minmax(280px,1fr) '+SPLIT_W+'px '+panelWidth+'px';
+}
+function initSplitters(){
+  var splitList=document.getElementById('split-list'), splitPanel=document.getElementById('split-panel');
+  function beginDrag(which, el, startEvt){
+    if(window.innerWidth<=1080) return;
+    startEvt.preventDefault();
+    var startX=startEvt.clientX, startList=listWidth, startPanel=panelWidth;
+    el.classList.add('dragging');
+    var prevSelect=document.body.style.userSelect; document.body.style.userSelect='none';
+    function onMove(ev){
+      var dx=ev.clientX-startX;
+      if(which==='list') listWidth=startList-dx; else panelWidth=startPanel-dx;
+      applyGridTemplate();
+    }
+    function onUp(){
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      el.classList.remove('dragging');
+      document.body.style.userSelect=prevSelect;
+      saveColWidths();
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }
+  function adjustByKey(which, dx){
+    if(window.innerWidth<=1080) return;
+    if(which==='list') listWidth-=dx; else panelWidth-=dx;
+    applyGridTemplate(); saveColWidths();
+  }
+  [['list',splitList],['panel',splitPanel]].forEach(function(pair){
+    var which=pair[0], el=pair[1];
+    el.addEventListener('mousedown', function(e){ beginDrag(which, el, e); });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='ArrowLeft'){ adjustByKey(which,-20); e.preventDefault(); }
+      else if(e.key==='ArrowRight'){ adjustByKey(which,20); e.preventDefault(); }
+    });
+  });
+  var resizeTid=null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTid); resizeTid=setTimeout(applyGridTemplate, 80);
+  });
+}
+
 Promise.all([
   fetch('data/ncs_tree_v3.json').then(r=>r.json()),
   fetch('data/case_tech_map_v2.json').then(r=>r.json()),
@@ -222,8 +323,10 @@ Promise.all([
     });
   });
   buildTechIndex();
-  initFilters(); initTabs(); initMatrixControls();
+  loadColWidths();
+  initFilters(); initTabs(); initMatrixControls(); initSplitters();
   render(); renderMatrix();
+  applyGridTemplate();
 }).catch(function(e){
   document.getElementById('sub').textContent='데이터를 불러오지 못했습니다: '+e.message+' (로컬 파일로 열면 브라우저 보안 정책 때문에 실패합니다. 웹 서버로 열어 주세요.)';
 });
@@ -449,7 +552,9 @@ function showNodeList(node,key){
 function hideList(){
   LIST=null;
   document.getElementById('tlist').style.display='none';
+  document.getElementById('split-list').style.display='none';
   document.querySelector('.wrap').classList.remove('withlist');
+  applyGridTemplate();
 }
 function renderList(){
   var box=document.getElementById('tlist');
@@ -466,7 +571,9 @@ function renderList(){
   });
   box.innerHTML=html;
   box.style.display='';
+  document.getElementById('split-list').style.display='';
   document.querySelector('.wrap').classList.add('withlist');
+  applyGridTemplate();
   box.querySelectorAll('.li').forEach(function(li){
     li.onclick=function(){
       var item=items.find(function(x){return x.tid===li.dataset.tid;});

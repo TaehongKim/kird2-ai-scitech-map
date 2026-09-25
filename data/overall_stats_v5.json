@@ -1,14 +1,12 @@
 {
  "metadata": {
-  "title": "Phase 5 Overall — AI 혁신 사례·NCS·기술군 통합 데이터",
+  "title": "AI 혁신 사례·NCS·기술군 통합 데이터",
   "version": "5.0",
-  "generated_date": "2026-09-23",
+  "generated_date": "2026-09-25",
   "ncs_basis": "NCS정보망DB 2026-02 (ncs.go.kr)",
   "disclaimer": "공식 NCS가 아니다. virtual=true 노드는 이 프로젝트가 추가한 AI 확장(안)이다.",
   "sources": [
-   "data/case_tech_map.json",
    "data/case_tech_map_v2.json",
-   "data/ncs_ai_map.json",
    "data/ncs_ai_map_v3.json",
    "data/ncs_tree_v3.json"
   ]
@@ -30,49 +28,6 @@
   "reclassified": 28,
   "common_specialized_overlap": 0,
   "cross_domain_common": 23
- },
- "phases": [
-  {
-   "phase": 1,
-   "title": "사례 조사",
-   "summary": "국내외 AI 과학기술 혁신 사례를 수집하고 출처·성과·활용 데이터를 구조화",
-   "metric": "100개 사례"
-  },
-  {
-   "phase": 2,
-   "title": "근거·기술군 분석",
-   "summary": "사례별 근거 문장과 AI 활용 방식을 분석해 공통·분야 특화 기술군을 도출",
-   "metric": "70개 기술"
-  },
-  {
-   "phase": 3,
-   "title": "지식맵·보고서",
-   "summary": "10개 과학기술 분야의 사례-기술 네트워크, 매트릭스, 분야별 지식맵을 구축",
-   "metric": "10개 과학기술 분야"
-  },
-  {
-   "phase": 4,
-   "title": "NCS 직무체계 확장",
-   "summary": "NCS 24개 대분류와 81개 중분류로 조사 범위를 확장하고 직무별 AI 기술을 연결",
-   "metric": "261개 사례 · 150개 기술"
-  },
-  {
-   "phase": 5,
-   "title": "배타적 재분류·Overall",
-   "summary": "실제 사례 인용 범위로 공통·특화 기술을 재계산하고, 5개 이상 대분류 공통기술을 범분야 AI 공통기술으로 묶어 전체 데이터와 통계를 통합",
-   "metric": "공통 53 · 특화 97 · 범분야 23 · 오버랩 0"
-  }
- ],
- "phase_comparison": {
-  "baseline_cases": 100,
-  "expanded_cases": 261,
-  "added_cases": 161,
-  "baseline_technologies": 70,
-  "expanded_technologies": 150,
-  "phase4_common": 25,
-  "phase4_specialized": 125,
-  "phase5_common": 53,
-  "phase5_specialized": 97
  },
  "ncs_majors": [
   {

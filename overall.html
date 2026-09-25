@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phase 5 Overall — AI 혁신 사례·NCS·기술군 통합 보고서</title>
+<title>AI 혁신 사례·NCS 기술체계 통합 보고서</title>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
   :root {
@@ -48,7 +48,7 @@
   .page { max-width: 1440px; margin: auto; padding: 28px 28px 80px; }
   .status { min-height: 22px; color: var(--muted); font-size: 12px; margin-bottom: 12px; }
   .status.error { color: var(--red); }
-  .kpis { display: grid; grid-template-columns: repeat(9, minmax(112px,1fr)); gap: 10px; margin-bottom: 54px; }
+  .kpis { display: grid; grid-template-columns: repeat(8, minmax(112px,1fr)); gap: 10px; margin-bottom: 54px; }
   .kpi { min-height: 112px; padding: 16px; background: linear-gradient(160deg,var(--surface2),var(--surface)); border: 1px solid var(--border); border-radius: 12px; }
   .kpi-value { font-size: clamp(25px,2.6vw,38px); font-weight: 760; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
   .kpi-label { margin-top: 5px; color: var(--muted); font-size: 12px; }
@@ -59,22 +59,6 @@
   h2 { margin: 7px 0 0; font-size: clamp(24px,3vw,38px); line-height: 1.18; letter-spacing: -.035em; }
   .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
   .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
-  .method { display: grid; grid-template-columns: 1.25fr 1fr; gap: 12px; margin-bottom: 14px; }
-  .method-main { padding: 24px; border-radius: 14px; background: linear-gradient(135deg,rgba(90,167,255,.13),rgba(167,139,250,.08)); border: 1px solid rgba(90,167,255,.35); }
-  .method-main .rule { font-size: clamp(18px,2.2vw,28px); font-weight: 720; line-height: 1.35; margin: 10px 0; }
-  .method-main p, .method-side p { margin: 0; color: var(--muted); font-size: 13px; }
-  .method-side { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .mini { padding: 17px; border: 1px solid var(--border); background: var(--surface); border-radius: 12px; }
-  .mini strong { font-size: 24px; color: var(--green); }
-  .mini span { display: block; color: var(--muted); font-size: 12px; margin-top: 5px; }
-  .journey { display: grid; grid-template-columns: repeat(5,minmax(170px,1fr)); gap: 12px; position: relative; }
-  .journey::before { content: ""; position: absolute; left: 8%; right: 8%; top: 35px; border-top: 1px solid var(--border); z-index: 0; }
-  .phase { position: relative; z-index: 1; padding: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; min-height: 205px; }
-  .phase-dot { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: var(--surface3); border: 2px solid var(--blue); color: var(--text); font-weight: 750; }
-  .phase:last-child .phase-dot { border-color: var(--green); box-shadow: 0 0 0 6px rgba(69,207,130,.08); }
-  .phase h3 { margin: 18px 0 8px; font-size: 16px; }
-  .phase p { margin: 0; color: var(--muted); font-size: 12px; }
-  .phase-metric { margin-top: 14px; color: var(--cyan); font-weight: 650; font-size: 12px; }
   .controls { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-bottom: 14px; }
   .controls label { color: var(--muted); font-size: 12px; }
   select, input[type="search"] { min-height: 38px; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
@@ -141,8 +125,6 @@
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   @media (max-width: 1120px) {
     .kpis { grid-template-columns: repeat(3,1fr); }
-    .journey { grid-template-columns: repeat(3,1fr); }
-    .journey::before { display: none; }
     .compare-grid { grid-template-columns: 1fr 1fr; }
     .compare-card:last-child { grid-column: 1 / -1; }
   }
@@ -150,10 +132,9 @@
     .topbar-inner, .hero-inner, .page { padding-left: 16px; padding-right: 16px; }
     .topbar-inner { align-items: flex-start; flex-direction: column; }
     .hero-inner { grid-template-columns: 1fr; padding-top: 48px; gap: 28px; }
-    .section-head, .method, .lineage, .cross-panel { grid-template-columns: 1fr; }
+    .section-head, .lineage, .cross-panel { grid-template-columns: 1fr; }
     .kpis { grid-template-columns: repeat(2,1fr); }
-    .journey { grid-template-columns: 1fr; }
-    .method-side, .compare-grid { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
     .compare-card:last-child { grid-column: auto; }
     .matrix-count { width: 100%; margin-left: 0; }
   }
@@ -171,9 +152,9 @@
       <a class="active" href="overall.html">Overall</a>
       <a href="report_final.html">Final Report</a>
       <a href="index.html">사례 지식맵</a>
-      <a href="ai_tech_map_v5.html">Phase 5 기술맵</a>
-      <a href="report5_ai_tech.html">Phase 5 보고서</a>
-      <a href="report4_ncs_ai.html">Phase 4 보고서</a>
+      <a href="ai_tech_map_v5.html">AI 기술맵</a>
+      <a href="report5_ai_tech.html">AI 기술 분류 보고서</a>
+      <a href="report4_ncs_ai.html">사례 확장 보고서</a>
     </nav>
   </div>
 </div>
@@ -181,13 +162,13 @@
 <header class="hero" id="top">
   <div class="hero-inner">
     <div>
-      <div class="eyebrow">Phase 5 · Overall Report &amp; Visualization</div>
+      <div class="eyebrow">Overall Report &amp; Visualization</div>
       <h1>AI 혁신 사례에서<br>NCS 직무 기술체계까지</h1>
-      <p>국내외 사례 수집, 근거 분석, 기술군 도출, NCS 24개 분야 확장, 공통·특화 기술 재분류까지 지금까지의 전체 작업을 하나의 데이터 흐름으로 통합했습니다.</p>
+      <p>국내외 사례 수집, 근거 분석, 기술군 도출, NCS 24개 분야 확장, 공통·특화 기술 분류까지 하나의 데이터 흐름으로 통합해 제공합니다.</p>
     </div>
     <aside class="hero-note">
       <strong>데이터 기반 배타적 분류</strong>
-      <p>동일 기술이 서로 다른 NCS 중분류 2곳 이상에서 확인되면 공통기술로 상향합니다. 정확히 1곳에만 결합되면 특화기술로 유지합니다. 따라서 공통·특화 기술의 오버랩은 구조적으로 0입니다.</p>
+      <p>동일 기술이 서로 다른 NCS 중분류 2곳 이상에서 확인되면 공통기술로 분류합니다. 정확히 1곳에만 결합되면 특화기술로 분류합니다. 따라서 공통·특화 기술의 오버랩은 구조적으로 0입니다.</p>
     </aside>
   </div>
 </header>
@@ -196,25 +177,9 @@
   <div id="status" class="status" aria-live="polite">전체 데이터를 불러오는 중입니다…</div>
   <div id="kpis" class="kpis" aria-label="전체 핵심 통계"></div>
 
-  <section id="journey">
-    <div class="section-head">
-      <div><div class="section-no">01 / JOURNEY</div><h2>전체 작업 여정</h2></div>
-      <p>사례 100건으로 시작한 과학기술 지식맵이 NCS 전 분야 261건으로 확장되고, 실제 인용 데이터를 기준으로 기술 분류가 정교해지는 과정입니다.</p>
-    </div>
-    <div class="method">
-      <div class="method-main">
-        <div class="eyebrow">Phase 5 classification rule</div>
-        <div class="rule">2개 이상 중분류 → 공통기술<br>1개 중분류 → 특화기술</div>
-        <p>사람이 기술 소속을 먼저 정하지 않고 사례가 실제로 어느 직무 분야에서 인용되었는지 매 빌드마다 다시 계산합니다.</p>
-      </div>
-      <div class="method-side" id="methodMetrics"></div>
-    </div>
-    <div id="journeyCards" class="journey"></div>
-  </section>
-
   <section id="portfolio">
     <div class="section-head">
-      <div><div class="section-no">02 / NCS PORTFOLIO</div><h2>NCS 24개 분야 포트폴리오</h2></div>
+      <div><div class="section-no">01 / NCS PORTFOLIO</div><h2>NCS 24개 분야 포트폴리오</h2></div>
       <p>각 NCS 대분류의 사례 규모와 고유 공통·특화 기술 수를 나란히 비교합니다. 분야를 선택하면 국내외 구성과 근거수준까지 확인할 수 있습니다.</p>
     </div>
     <div class="panel">
@@ -234,16 +199,16 @@
 
   <section id="crossDomain">
     <div class="section-head">
-      <div><div class="section-no">03 / CROSS-DOMAIN</div><h2>범분야 AI 공통기술</h2></div>
-      <p>대분류별 AI 공통기술(AI-C) 가운데 5개 이상 NCS 대분류에 함께 등장하는 기술을 범분야 AI 공통기술로 묶었습니다. 괄호 숫자는 해당 기술을 쓰는 대분류 수이며, Phase 5 기술맵 계층트리 최상단에만 같은 목록이 표시됩니다.</p>
+      <div><div class="section-no">02 / CROSS-DOMAIN</div><h2>범분야 AI 공통기술</h2></div>
+      <p>대분류별 AI 공통기술(AI-C) 가운데 5개 이상 NCS 대분류에 함께 등장하는 기술을 범분야 AI 공통기술로 묶었습니다. 괄호 숫자는 해당 기술을 쓰는 대분류 수이며, AI 기술맵 계층트리 최상단에 같은 목록이 표시됩니다.</p>
     </div>
     <div class="panel cross-panel">
       <div class="cross-rule">
         <div class="eyebrow">Cross-domain rule</div>
         <strong id="crossCount">-</strong>
         <p id="crossRule"></p>
-        <p>중분류 2곳 이상 → 공통기술 규칙을 한 단계 위로 올린 것입니다. 대분류별 공통기술 배치는 근거 추적을 위해 유지하되, 트리에서는 범분야 기술을 각 분야 공통기술 목록에서 제외합니다.</p>
-        <div class="file-links"><a href="ai_tech_map_v5.html">Phase 5 기술맵에서 보기</a></div>
+        <p>중분류 2곳 이상 → 공통기술 규칙을 대분류 단위로 한 단계 넓게 적용한 것입니다. 대분류별 공통기술 배치는 근거 추적을 위해 유지하되, 트리에서는 범분야 기술을 각 분야 공통기술 목록에서 제외합니다.</p>
+        <div class="file-links"><a href="ai_tech_map_v5.html">AI 기술맵에서 보기</a></div>
       </div>
       <div id="crossList" class="cross-list" aria-label="범분야 AI 공통기술 목록"></div>
       <div id="crossDetail" class="cross-detail" aria-live="polite">기술을 선택하면 사용 대분류와 근거 사례 수를 표시합니다.</div>
@@ -252,7 +217,7 @@
 
   <section id="matrix">
     <div class="section-head">
-      <div><div class="section-no">04 / CROSS-FIELD MATRIX</div><h2>공통기술 매트릭스</h2></div>
+      <div><div class="section-no">03 / CROSS-FIELD MATRIX</div><h2>공통기술 매트릭스</h2></div>
       <p>범분야 기술을 포함한 공통기술 53종이 NCS 24개 분야 중 어디에서 실제 사례 근거로 확인됐는지 보여줍니다. 코드만이 아니라 모든 NCS 분야명을 열에 함께 표시합니다.</p>
     </div>
     <div class="panel matrix-panel">
@@ -271,7 +236,7 @@
 
   <section id="comparison">
     <div class="section-head">
-      <div><div class="section-no">05 / EVIDENCE</div><h2>국내·해외 및 근거수준</h2></div>
+      <div><div class="section-no">04 / EVIDENCE</div><h2>국내·해외 및 근거수준</h2></div>
       <p>전체 261개 사례의 지역 구성, 사례와 기술 배치의 명시·추정 근거 비율, 발표연도 분포를 같은 데이터 버전에서 계산했습니다.</p>
     </div>
     <div class="compare-grid">
@@ -283,7 +248,7 @@
 
   <section id="lineage">
     <div class="section-head">
-      <div><div class="section-no">06 / DATA LINEAGE</div><h2>데이터 계보와 산출물</h2></div>
+      <div><div class="section-no">05 / DATA LINEAGE</div><h2>데이터 계보와 산출물</h2></div>
       <p>공식 NCS 골격과 프로젝트가 도출한 AI 확장안을 구분하고, 각 보고서와 시각화가 어떤 데이터 버전을 사용하는지 추적할 수 있습니다.</p>
     </div>
     <div id="lineageGrid" class="lineage"></div>
@@ -307,7 +272,6 @@ fetch('data/overall_stats_v5.json').then(response => {
 }).then(data => {
   DATA = data;
   renderKpis();
-  renderJourney();
   initControls();
   renderPortfolio();
   renderCrossDomain();
@@ -331,26 +295,11 @@ function renderKpis() {
     ['NCS 소분류', s.ncs_minors, `세분류 ${fmt(s.ncs_jobs)}개`],
     ['NCS 능력단위', s.ncs_units, '2026년 2월 기준'],
     ['기술 배치', s.placements, `가상 노드 ${s.virtual_nodes}개`],
-    ['재분류', s.reclassified, '특화 → 공통 승격'],
     ['분류 오버랩', s.common_specialized_overlap, '배타적 분할 검증'],
     ['범분야 AI 공통기술', s.cross_domain_common, '5개 이상 대분류 공통'],
   ];
   d3.select('#kpis').selectAll('article').data(items).join('article').attr('class','kpi')
     .html(d => `<div class="kpi-value">${fmt(d[1])}</div><div class="kpi-label">${esc(d[0])}</div><div class="kpi-context">${esc(d[2])}</div>`);
-}
-
-function renderJourney() {
-  const c = DATA.phase_comparison;
-  const metrics = [
-    [fmt(c.added_cases), 'Phase 4에서 추가된 사례'],
-    ['+' + fmt(c.expanded_technologies - c.baseline_technologies), '확장된 기술 종류'],
-    [fmt(c.phase5_common - c.phase4_common), '공통기술 순증'],
-    [fmt(DATA.summary.common_specialized_overlap), '공통·특화 오버랩'],
-  ];
-  d3.select('#methodMetrics').selectAll('div').data(metrics).join('div').attr('class','mini')
-    .html(d => `<strong>${esc(d[0])}</strong><span>${esc(d[1])}</span>`);
-  d3.select('#journeyCards').selectAll('article').data(DATA.phases).join('article').attr('class','phase')
-    .html(d => `<div class="phase-dot">${d.phase}</div><h3>${esc(d.title)}</h3><p>${esc(d.summary)}</p><div class="phase-metric">${esc(d.metric)}</div>`);
 }
 
 function renderCrossDomain() {
@@ -490,11 +439,11 @@ function renderLineage() {
       <article class="lineage-card"><h3>② 구조화 데이터</h3><p>사례, 기술, NCS 코드, 근거수준, 중요도, 기술 배치를 JSON으로 분리했습니다.</p></article>
     </div>
     <div class="lineage-col">
-      <article class="lineage-card primary"><h3>③ Phase 5 통합·재분류</h3><p>261개 사례의 실제 (대분류, 중분류) 인용을 기준으로 150개 기술을 매번 재계산합니다. 2개 이상 중분류에 등장한 기술 ${s.common_technologies}종은 공통, 1개에만 등장한 ${s.specialized_technologies}종은 특화입니다.</p><ul><li>재분류 ${s.reclassified}종</li><li>기술 배치 ${s.placements}건</li><li>공통·특화 오버랩 ${s.common_specialized_overlap}건</li><li>범분야 AI 공통기술 ${s.cross_domain_common}종</li></ul><div class="file-links"><a href="data/overall_stats_v5.json">Overall JSON</a><a href="data/case_tech_map_v2.json">사례 v2</a><a href="data/ncs_ai_map_v3.json">AI 기술 v3</a><a href="data/ncs_tree_v3.json">NCS 트리 v3</a></div></article>
+      <article class="lineage-card primary"><h3>③ 기술 통합·분류</h3><p>261개 사례의 실제 (대분류, 중분류) 인용을 기준으로 150개 기술을 매번 재계산합니다. 2개 이상 중분류에 등장한 기술 ${s.common_technologies}종은 공통, 1개에만 등장한 ${s.specialized_technologies}종은 특화입니다.</p><ul><li>기술 배치 ${s.placements}건</li><li>공통·특화 오버랩 ${s.common_specialized_overlap}건</li><li>범분야 AI 공통기술 ${s.cross_domain_common}종</li></ul><div class="file-links"><a href="data/overall_stats_v5.json">Overall JSON</a><a href="data/case_tech_map_v2.json">사례 v2</a><a href="data/ncs_ai_map_v3.json">AI 기술 v3</a><a href="data/ncs_tree_v3.json">NCS 트리 v3</a></div></article>
     </div>
     <div class="lineage-col">
-      <article class="lineage-card"><h3>④ 시각화</h3><p>전체 포트폴리오, NCS 계층 트리, 공통기술 매트릭스, 사례-기술 네트워크를 목적별 페이지로 제공합니다.</p><div class="file-links"><a href="overall.html">Overall</a><a href="ai_tech_map_v5.html">Phase 5 기술맵</a><a href="ncs_ai_tree_v2.html">NCS 확장 트리</a><a href="index.html">사례 지식맵</a></div></article>
-      <article class="lineage-card"><h3>⑤ 보고서</h3><p>방법론, 전체 결과, 한계, 전략적 시사점과 재분류 근거를 추적할 수 있습니다.</p><div class="file-links"><a href="report5_ai_tech.html">Phase 5 보고서</a><a href="report4_ncs_ai.html">Phase 4 보고서</a><a href="report.html">사례 분석 보고서</a></div></article>
+      <article class="lineage-card"><h3>④ 시각화</h3><p>전체 포트폴리오, NCS 계층 트리, 공통기술 매트릭스, 사례-기술 네트워크를 목적별 페이지로 제공합니다.</p><div class="file-links"><a href="overall.html">Overall</a><a href="ai_tech_map_v5.html">AI 기술맵</a><a href="ncs_ai_tree_v2.html">NCS 확장 트리</a><a href="index.html">사례 지식맵</a></div></article>
+      <article class="lineage-card"><h3>⑤ 보고서</h3><p>방법론, 전체 결과, 한계, 전략적 시사점과 분류 근거를 추적할 수 있습니다.</p><div class="file-links"><a href="report5_ai_tech.html">AI 기술 분류 보고서</a><a href="report4_ncs_ai.html">사례 확장 보고서</a><a href="report.html">사례 분석 보고서</a></div></article>
     </div>`;
 }
 
